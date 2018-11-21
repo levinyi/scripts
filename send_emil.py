@@ -29,3 +29,5 @@ try:
     print "邮件发送成功"
 except smtplib.SMTPException:
     print "Error: 无法发送邮件"
+
+# http://www.runoob.com/python/python-email.html
