@@ -25,8 +25,8 @@ def dispatch_dict(operator, x, y):
             }.get(operator, lambda:None)()
 
 
-dispatch_if('mul', 2, 8)
-dispatch_dict('mul',2, 8)
+print(dispatch_if('mul', 2, 8))
+print(dispatch_dict('mul',2, 8))
 
-dispatch_if('unknow', 2, 8)
-dispatch_dict('unknow', 2, 8)
+print(dispatch_if('unknow', 2, 8))
+print(dispatch_dict('unknow', 2, 8))
