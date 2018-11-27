@@ -36,6 +36,9 @@ def BLAST(seq1, seq2):
     print scores
     print point
 
+    for j in range(1,l2+1):
+        letter2 = seq2[j-1]
+        print letter2
 # a = 'ATAAATGTATTTATGATTGATGTATTTTTTTACATGGATTTTTTCGTCCCAAAAAGGG'
 # b = 'ATAAATGTATTTATGATTGTTAACTTTTTTTAGGGGGATTTTTTCGTCCCAAAAAGGG'
 a = 'ATAAATGTAT'
