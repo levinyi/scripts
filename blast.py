@@ -11,6 +11,23 @@ def score(a, b):
         score += -7
     return score
 
+def PAM_matrix_score(a,b):
+    score = 0
+
+    return score
+
+def Blosum_matrix_score(a,b):
+
+
+    score = 0
+    lst = []
+    
+    if sss:
+        lanbuda = 4
+    else:
+        lanbuda = 20
+    S = (1/lanbuda)log(pij/qi*qj)
+    return score
 
 def BLAST(seq1, seq2):
     l1 = len(seq1)
