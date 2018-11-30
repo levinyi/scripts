@@ -11,9 +11,10 @@ def score_match(pair, matrix):
 
 
 def score_pairwise(seq1, seq2, matrix, gap_s, gap_e):
+    # create a zero-filled matrix
     for i in xrange(1,len(seq1)+1):
         pair = (seq1[i], seq2[i])
-        print pair
+        
 
 
 def make_matrix(sizex, sizey):
