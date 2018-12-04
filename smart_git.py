@@ -1,3 +1,11 @@
+"""
+smart git tools 
+"""
+
+# Info
+__author__ = 'Shiyi Du'
+
+# Imports
 import sys
 import os 
 
