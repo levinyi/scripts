@@ -20,4 +20,7 @@ def git_push(a):
 
 if __name__ == '__main__':
     job = sys.argv[1]
-    git_push(job)
+    if not os.path.exists(job):
+        sys.exit("No such file!")
+    else:
+        git_push(job)
