@@ -15,5 +15,4 @@ each file ...
 
 # Brute Force zip file:
 
-Brute_Force_zip.py
-passwords.txt
+Brute_Force_zip.py is a script that can brute force zip file while using the passwords.txt as a known passwords database.
