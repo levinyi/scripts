@@ -17,6 +17,13 @@ each file ...
 
 Brute_Force_zip.py is a script that can brute force zip file while using the passwords.txt as a known passwords database.
 
+* related refs: passwords.txt
+
+example:
+```
+python Brute_Force_zip.py <your_file.zip>
+```
+
 # Compared two files:
 
 With this tool you can calculate the intersection(s) of list of elements. It will generate a textual output indicating which elements are in each intersection or are unique to a certain list. Currently you are able to calculate the intersections of at maximum 30 lists.
