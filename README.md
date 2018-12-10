@@ -13,4 +13,7 @@ if the scripts start with "smart", it is mostly a wraper of some tools, for exam
 
 each file ...
 
+# Brute Force zip file:
 
+Brute_Force_zip.py
+passwords.txt
