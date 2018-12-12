@@ -1,0 +1,5 @@
+# Python
+*.py[cod]
+R_stuff
+python_packages
+jinja2
