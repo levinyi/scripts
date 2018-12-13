@@ -12,4 +12,12 @@ chromedriver is a
 
 # amazon web commonts download
 
-This script can download commonts from amazon website.
+This script [test_amazon.py] can download commonts from amazon website.
+
+`items` should be defined before run this script.
+
+for example:
+```
+python test_amazon.py
+```
+
