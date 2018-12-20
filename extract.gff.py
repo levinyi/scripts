@@ -33,8 +33,9 @@ class GFF(object):
         if len(result) ==0:
             print(self.attributes)
         print result
-        # gene_type, gene_name = result
-        # return gene_type, gene_name
+        print type(result)
+        # gene_type, gene_name = result[:]
+        # print gene_type, gene_name
         # return result
 
     def print_all_feature(self):
@@ -62,7 +63,9 @@ def main():
     header.close()
 
     for each in gff_list:
-        each.get_attr_name()
+        # each.get_attr_name()
+        if each.get_attr_name()[2] =='TR_V_gene':
+            print "yes"
         # print(gene_type,gene_name)
             # each.print_all_feature()
 
