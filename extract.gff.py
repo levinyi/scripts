@@ -1,12 +1,14 @@
 import sys
 import os
 import argparse
+import re
 
 
 def _argparse():
     parser = argparse.ArgumentParser(description='This is description')
-    parser.add_argument('-f', '--gff', action='store', dest='gff', help='help info')
-    parser.add_argument('-r', '--fasta', action='store', dest='fasta', help='help info')
+    parser.add_argument('-g', '--gff', action='store', dest='gff', help='help info')
+    parser.add_argument('-f', '--fasta', action='store', dest='fasta', help='help info')
+    return parser.parse_args()
 
 
 class GFF(object):
@@ -24,27 +26,46 @@ class GFF(object):
         self.phase = phase
         self.attributes = attributes
 
-    def attributes(self.attributes):
-        attr = self.attributes.split("\t")
-        for each in attr:
-            ID = 
-            gene_id = 
-            gene_type = 
+    def get_attr_name(self):
+        p = re.compile(r'.*?gene_type=(\w*?);gene_name=([\w*\.?\-?\/?]+);.*?')
+        result = p.findall(self.attributes)
+        # result = list(set(result))
+        if len(result) ==0:
+            print(self.attributes)
+        print result
+        # gene_type, gene_name = result
+        # return gene_type, gene_name
+        # return result
+
+    def print_all_feature(self):
+        print("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (self.seq_id, self.source, self.types, self.start, self.ends, self.core, self.strand, self.phase, self.attributes))
+
 
 def main():
     parser = _argparse()
-    if not parser.gff or not parser.fasta:
-        sys.exit("no input file")
-    gff_list = []
-    with open(parser.gff,"r") as f:
-        for line in f:
-            line = line.rstrip("\n")
-            if line.startswith("#"):
-                pass
 
-            aninstance = GFF(line.split("\t"))
-            gff_list.append(aninstance)
+    if parser.gff.endswith(".gz"):
+        import gzip
+        header = gzip.open(parser.gff, "r")
+    else:
+        header = open(parser.gff, "r")
+
+    gff_list = []
+    for line in header:
+        line = line.rstrip("\n")
+        if line.startswith("#"):
+            continue
+        a, b, c, d, e, f, g, h, j = line.split("\t")
+
+        aninstance = GFF(a, b, c, d, e, f, g, h, j)
+        gff_list.append(aninstance)
+    header.close()
+
     for each in gff_list:
-        print each.attributes()
+        each.get_attr_name()
+        # print(gene_type,gene_name)
+            # each.print_all_feature()
+
+
 if __name__ == '__main__':
     main()
