@@ -2,6 +2,7 @@ import sys
 import os
 import argparse
 import re
+import gzip
 
 
 def _argparse():
@@ -54,24 +55,23 @@ def addtwodimdict(thedict, key_a, key_b, val):
         thedict.update({key_a:{key_b:[val]}})
     return thedict
 
-class GeneStruture(object):
-    """docstring for GeneStruture"""
 
-    def __init__(self, gene_name, seq_id, five_prime_UTR, CDS, intron, exon, start_code):
-        self.gene_name = gene_name
-        self.seq_id = seq_id
-        self.five_prime_UTR = five_prime_UTR
-        self.CDS = CDS
-        self.intron = intron
-        self.exon = exon
-        self.start_code = start_code
+def deal_fasta(fasta):
+    if fasta.endswith(".gz"):
+        header = gzip.open(fasta,"r")
+    else:
+        header = open(fasta,"r")
+    for line in header:
+        line = rstrip("\n")
+        line
 
+    header.close()
+    return fasta_dict
 
 def main():
     parser = _argparse()
 
     if parser.gff.endswith(".gz"):
-        import gzip
         header = gzip.open(parser.gff, "r")
     else:
         header = open(parser.gff, "r")
@@ -115,7 +115,6 @@ def main():
 
     gene_structure_list = []
     for k, v in gene_dict.items():
-        # print k, v
         # if 'five_prime_UTR' not in v.keys():
         #     print k,v 
         if 'start_codon' not in v.keys():
