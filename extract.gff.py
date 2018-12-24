@@ -3,6 +3,7 @@ import os
 import argparse
 import re
 import gzip
+from Bio import SeqIO
 
 
 def _argparse():
@@ -57,15 +58,13 @@ def addtwodimdict(thedict, key_a, key_b, val):
 
 
 def deal_fasta(fasta):
+    fasta_dict = {}
     if fasta.endswith(".gz"):
         header = gzip.open(fasta,"r")
     else:
         header = open(fasta,"r")
-    for line in header:
-        line = rstrip("\n")
-        line
-
-    header.close()
+    for record in SeqIO.parse(header,"fasta"):
+        fasta_dict[record.id] = record.seq
     return fasta_dict
 
 def main():
@@ -127,6 +126,8 @@ def main():
         # print(gene_type,gene_name)
         # each.print_all_feature()
 
-
+    fasta_dict = deal_fasta(parser.fasta)
+    for k,v in fasta_dict.items():
+        print k,v
 if __name__ == '__main__':
     main()
