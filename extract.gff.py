@@ -29,12 +29,13 @@ class GFF(object):
         self.attributes = attributes
 
     def get_attr_name(self):
-        p = re.compile(r'.*?gene_type=(\w*?);gene_name=([\w*\.?\-?\/?]+);.*?')
+        p = re.compile(r'.*gene_id=([\w*\.?]+);.*?gene_type=(\w*?);gene_name=([\w*\.?\-?\/?]+);.*?')
         # result = p.findall(self.attributes)
         result = p.match(self.attributes)
         if result:
-            gene_type, gene_name = result.groups()
-        return gene_type, gene_name
+            gene_id, gene_type, gene_name = result.groups()
+        # print(gene_id, gene_type, gene_name)
+        return gene_id, gene_type, gene_name
 
     def print_all_feature(self):
         print("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s" % (self.seq_id, self.source, self.types, self.start, self.ends, self.core, self.strand, self.phase, self.attributes))
@@ -48,28 +49,58 @@ def two_dimension_dict(dict_name, key_1, key_2, value):
         dict_name.update({key_1: {key_2: value}})
     return dict_name
 
+
 def addtwodimdict(thedict, key_a, key_b, val):
     ''' this is a function to add two dimetion dict '''
     if key_a in thedict:
-        thedict[key_a].setdefault(key_b,[]).append(val)
+        thedict[key_a].setdefault(key_b, []).append(val)
     else:
-        thedict.update({key_a:{key_b:[val]}})
+        thedict.update({key_a: {key_b: [val]}})
     return thedict
 
 
 def deal_fasta(fasta):
     fasta_dict = {}
     if fasta.endswith(".gz"):
-        header = gzip.open(fasta,"r")
+        header = gzip.open(fasta, "r")
     else:
-        header = open(fasta,"r")
-    for record in SeqIO.parse(header,"fasta"):
+        header = open(fasta, "r")
+    for record in SeqIO.parse(header, "fasta"):
         fasta_dict[record.id] = record.seq
     return fasta_dict
 
+
+def DNA_complement(sequence):
+    sequence = sequence.upper()
+    sequence = sequence.replace('A', 't')
+    sequence = sequence.replace('T', 'a')
+    sequence = sequence.replace('C', 'g')
+    sequence = sequence.replace('G', 'c')
+    return sequence.upper()
+
+
+def DNA_reverse(sequence):
+    sequence = sequence.upper()
+    return sequence[::-1]
+
+
+def trim_fasta(fasta_dict, chrm, start, end, strand):
+    # vdict is like : {TRGV11 {'seq_id': 'chr7', 'five_prime_UTR': '38291925_38292078', 'exon': ['38291616_38292078'], 'CDS': ['38291616_38291924'], 'gene': '38291616_38292078', 'strand': '-'}}
+
+    if strand == '-':
+        newseq = DNA_reverse(DNA_complement(str(fasta_dict[chrm][start: end])))
+    else:
+        newseq = fasta_dict[chrm][start: end]
+    return newseq
+
+
 def main():
     parser = _argparse()
+    # deal fasta file
+    fasta_dict = deal_fasta(parser.fasta)
+    print "finished deal fasta, stored as a dict."
 
+    # deal gff file
     if parser.gff.endswith(".gz"):
         header = gzip.open(parser.gff, "r")
     else:
@@ -85,49 +116,64 @@ def main():
         aninstance = GFF(a, b, c, d, e, f, g, h, j)
         gff_list.append(aninstance)
     header.close()
+    print "finished deal gff, stored as a list of object."
 
+    # deal gff list. stored to the dict.
     gene_dict = {}
     for gff_line in gff_list:
-        gene_type, gene_name = gff_line.get_attr_name()
+        gene_id, gene_type, gene_name = gff_line.get_attr_name()
         # print gene_type, gene_name
         if gene_type == 'TR_V_gene':
-            two_dimension_dict(gene_dict, gene_name, 'seq_id', gff_line.seq_id)
-            two_dimension_dict(gene_dict, gene_name, 'strand', gff_line.strand)
+            two_dimension_dict(gene_dict, gene_id, 'gene_name', gene_name)
+            two_dimension_dict(gene_dict, gene_id, 'seq_id', gff_line.seq_id)
+            two_dimension_dict(gene_dict, gene_id, 'strand', gff_line.strand)
 
             if gff_line.types == 'gene':
                 region = '_'.join([gff_line.start, gff_line.ends])
-                two_dimension_dict(gene_dict, gene_name, 'gene', region)
+                two_dimension_dict(gene_dict, gene_id, 'gene', region)
             elif gff_line.types == 'exon':
                 region = '_'.join([gff_line.start, gff_line.ends])
-                addtwodimdict(gene_dict, gene_name, 'exon', region)
+                addtwodimdict(gene_dict, gene_id, 'exon', region)
             elif gff_line.types == 'CDS':
                 region = '_'.join([gff_line.start, gff_line.ends])
-                addtwodimdict(gene_dict, gene_name, "CDS", region)
+                addtwodimdict(gene_dict, gene_id, "CDS", region)
             elif gff_line.types == 'start_codon':
                 region = '_'.join([gff_line.start, gff_line.ends])
-                two_dimension_dict(gene_dict, gene_name, "start_codon", region)
+                two_dimension_dict(gene_dict, gene_id, "start_codon", region)
             elif gff_line.types == 'five_prime_UTR':
                 region = '_'.join([gff_line.start, gff_line.ends])
-                two_dimension_dict(gene_dict, gene_name, "five_prime_UTR", region)
+                two_dimension_dict(gene_dict, gene_id, "five_prime_UTR", region)
 
             # print gene_type, gene_name, gff_line.print_all_feature()
+    print "convert gff object to a dict"
 
-    gene_structure_list = []
-    for k, v in gene_dict.items():
-        # if 'five_prime_UTR' not in v.keys():
-        #     print k,v 
-        if 'start_codon' not in v.keys():
-            print k,v
+    #  get result
+    print "start print result"
+    with open("vgene.txt","w") as f1, open("utr.txt","w") as f2:
+        for k, v in gene_dict.items():
+            # print k, v
+            if 'gene' in v.keys():
+                start, end = v['gene'].split("_")
+                gene_seq = trim_fasta(fasta_dict, v['seq_id'], int(start), int(end), v['strand'])
+                f1.write(">%s %s %s %s %s %s\n%s" % (k,v['gene_name'], v['seq_id'], start, end, v['strand'], gene_seq))
+                # verified.
+            if 'start_codon' in v.keys():
+                start, end = v['start_codon'].split("_")
+                if v['strand'] == "+":
+                    start, end = int(start) - 200, int(start)
+                else:
+                    start, end = int(end)+1, int(end) + 201
+                UTR_seq = trim_fasta(fasta_dict, v['seq_id'], int(start), int(end), v['strand'])
+                f2.write(">%s %s %s utr %s %s %s\n%s" % (v['gene_name'], v['seq_id'], k, start, end, v['strand'], UTR_seq))
+            elif 'five_prime_UTR' in v.keys():
+                start, end = v['five_prime_UTR'].split("_")
+                if v['strand'] == "+":
+                    start,end = int(end) - 200,int(end)
+                else:
+                    start, end = int(start),int(start) + 200
+                UTR_seq = trim_fasta(fasta_dict, v['seq_id'], int(start), int(end), v['strand'])
+                f2.write(">%s %s %s utr %s %s %s\n%s" % (v['gene_name'], v['seq_id'], k, start, end, v['strand'], UTR_seq))
+    # print len(gene_dict)
 
-        # aninstance = GeneStruture(seqid, five_prime_UTR, cds, intron, gene_type, gene_name)
-        # gene_structure_list.append(aninstance)
-
-        #     print "yes"
-        # print(gene_type,gene_name)
-        # each.print_all_feature()
-
-    fasta_dict = deal_fasta(parser.fasta)
-    for k,v in fasta_dict.items():
-        print k,v
 if __name__ == '__main__':
     main()
