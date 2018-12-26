@@ -16,8 +16,8 @@ else:
     types = "fastq"
 
 chrome = sys.argv[2]
-start = int(sys.argv[3])
+starts = int(sys.argv[3])
 ends = int(sys.argv[4])
 for record in SeqIO.parse(header,types):
     if record.id == chrome:
-        print record.seq[start:ends]
+        print record.seq[starts - 1 : ends] # start include; ends exclude
