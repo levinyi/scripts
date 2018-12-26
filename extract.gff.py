@@ -29,11 +29,18 @@ class GFF(object):
         self.attributes = attributes
 
     def get_attr_name(self):
-        p = re.compile(r'.*gene_id=([\w*\.?]+);.*?gene_type=(\w*?);gene_name=([\w*\.?\-?\/?]+);.*?')
+        p = re.compile(r'.*gene_id=([\w*\.?]+);.*?gene_type=(\w*?);gene_name=([\w*\.?\-?\/?\(?\)?]+);.*?')
         # result = p.findall(self.attributes)
         result = p.match(self.attributes)
+        # print result
         if result:
+            # print result.groups()
             gene_id, gene_type, gene_name = result.groups()
+        else:
+            print self.attributes
+            # sys.exit(self.attributes)
+        if len(result.groups()) == 2:
+            print result
         # print(gene_id, gene_type, gene_name)
         return gene_id, gene_type, gene_name
 
@@ -121,6 +128,7 @@ def main():
     # deal gff list. stored to the dict.
     gene_dict = {}
     for gff_line in gff_list:
+        # print gff_line.get_attr_name()
         gene_id, gene_type, gene_name = gff_line.get_attr_name()
         # print gene_type, gene_name
         if gene_type == 'TR_V_gene':
