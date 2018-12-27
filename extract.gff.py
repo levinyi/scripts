@@ -134,7 +134,7 @@ def main():
         gene_id, gene_type, gene_name = gff_line.get_attr_name()
         ff.write("%s\n" % gene_type)
         # print gene_type, gene_name
-        if gene_type == 'TR_V_gene':
+        if gene_type == 'TR_V_gene' or gene_type == 'TR_V_pseudogene':
             two_dimension_dict(gene_dict, gene_id, 'gene_name', gene_name)
             two_dimension_dict(gene_dict, gene_id, 'seq_id', gff_line.seq_id)
             two_dimension_dict(gene_dict, gene_id, 'strand', gff_line.strand)
