@@ -1,23 +1,59 @@
+import os
 import sys
 from Bio import SeqIO
 import argparse
 import gzip
 
+
 def _argparse():
     pass
 
-if sys.argv[1].endswith(".gz"):
-    header = gzip.open(sys.argv[1],"r")
-else:
-    header = open(sys.argv[1],"r")
-if sys.argv[1].replace(".gz","").endswith("fa"):
-    types = "fasta"
-else:
-    types = "fastq"
 
-chrome = sys.argv[2]
-starts = int(sys.argv[3])
-ends = int(sys.argv[4])
-for record in SeqIO.parse(header,types):
-    if record.id == chrome:
-        print record.seq[starts - 1 : ends] # start include; ends exclude
+def deal_fastq(fastq, id_list):
+    for record in SeqIO.parse(fastq, "fastq"):
+        if record.id in id_list:
+            SeqIO.write(record, "extract.id.fastq", "fastq")
+
+
+def deal_fasta(fasta, chrome, start=0, end=0):
+    for record in SeqIO.parse(fasta, "fasta"):
+        if record.id == chrome:
+            print record.seq[start - 1: end]  # start include; ends exclude
+
+# check file header.
+if sys.argv[1].endswith(".gz"):
+    header = gzip.open(sys.argv[1], "r")
+else:
+    header = open(sys.argv[1], "r")
+
+# input is fasta format.
+if sys.argv[1].replace(".gz", "").endswith("fa") or sys.argv[1].replace(".gz", "").endswith("fasta"):
+    # extract specific region sequence.
+    if len(sys.argv) == 5:
+        chrome = sys.argv[2]
+        starts = int(sys.argv[3])
+        ends = int(sys.argv[4])
+        deal_fasta(header, chrome, starts, ends)
+    # extract whole chrome sequence.
+    elif len(sys.argv) == 3:
+        chrome = sys.argv[2]
+        deal_fasta(header, chrome)
+    # argument error
+    else:
+        sys.exit("error with input format. see example.")
+
+# input is fastq format
+elif sys.argv[1].replace(".gz", "").endswith("fq") or sys.argv[1].replace(".gz", "").endswith("fastq"):
+    # read id is a file
+    if os.path.isfile(sys.argv[2]) :
+        id_list = [line.rstrip("\n") for line in open(sys.argv[2], "r")]
+    # specific read id
+    else:
+        id_list = []
+        id_list.append(sys.argv[2])
+    deal_fastq(header, id_list)
+
+# input format error. do not support other format file.
+else:
+    sys.exit("please check your input file types: fastq or fasta ?")
+
