@@ -3,7 +3,7 @@ import sys
 from Bio import SeqIO
 import argparse
 import gzip
-
+'''https://www.jianshu.com/p/22051fc6e0a3'''
 
 def deal_fastq(fastq, id_list, file_true):
     for record in SeqIO.parse(fastq, "fastq"):
