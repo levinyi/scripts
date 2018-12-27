@@ -10,6 +10,7 @@ def _argparse():
     parser = argparse.ArgumentParser(description='This is description')
     parser.add_argument('-g', '--gff', action='store', dest='gff', help='help info')
     parser.add_argument('-f', '--fasta', action='store', dest='fasta', help='help info')
+    parser.add_argument('-d', '--show_dict', action='store_true', default=False, dest='show_dict', help='help info')
     return parser.parse_args()
 
 
@@ -95,9 +96,9 @@ def trim_fasta(fasta_dict, chrm, start, end, strand):
     # vdict is like : {TRGV11 {'seq_id': 'chr7', 'five_prime_UTR': '38291925_38292078', 'exon': ['38291616_38292078'], 'CDS': ['38291616_38291924'], 'gene': '38291616_38292078', 'strand': '-'}}
 
     if strand == '-':
-        newseq = DNA_reverse(DNA_complement(str(fasta_dict[chrm][start-1: end])))
+        newseq = DNA_reverse(DNA_complement(str(fasta_dict[chrm][start - 1: end])))
     else:
-        newseq = fasta_dict[chrm][start-1: end]
+        newseq = fasta_dict[chrm][start - 1: end]
     return newseq
 
 
@@ -126,10 +127,12 @@ def main():
     print "finished deal gff, stored as a list of object."
 
     # deal gff list. stored to the dict.
+    ff = open("gene_type.txt", "w")
     gene_dict = {}
     for gff_line in gff_list:
         # print gff_line.get_attr_name()
         gene_id, gene_type, gene_name = gff_line.get_attr_name()
+        ff.write("%s\n" % gene_type)
         # print gene_type, gene_name
         if gene_type == 'TR_V_gene':
             two_dimension_dict(gene_dict, gene_id, 'gene_name', gene_name)
@@ -157,7 +160,7 @@ def main():
 
     #  get result
     print "start print result"
-    with open("TRV_gene.fa","w") as f1, open("TRV_UTR.fa","w") as f2:
+    with open("TRV_gene.fa", "w") as f1, open("TRV_UTR.fa", "w") as f2:
         for k, v in gene_dict.items():
             # print k, v
             if 'gene' in v.keys():
@@ -166,24 +169,24 @@ def main():
                 f1.write(">%s %s %s %s %s %s\n%s\n" % (v['gene_name'], v['seq_id'], k, start, end, v['strand'], gene_seq))
                 # verified.
             if 'start_codon' in v.keys():
-                start, end = v['start_codon'].split("_") # codon is :142308589-142308591 but utr is:142308542-142308588
+                start, end = v['start_codon'].split("_")  # codon is :142308589-142308591 but utr is:142308542-142308588
                 # start_codon_seq = trim_fasta(fasta_dict, v['seq_id'], int(start), int(end),v['strand'])
                 if v['strand'] == "+":
-                    start, end = int(start) - 201, int(start)-1
+                    start, end = int(start) - 201, int(start) - 1
                 else:
                     # print("start_codon:%s"%(start_codon_seq))
                     # codon is :38349822-38349824 but utr is 38349825-38350022
-                    start, end = int(end)+1, int(end) + 201
+                    start, end = int(end) + 1, int(end) + 201
                 UTR_seq = trim_fasta(fasta_dict, v['seq_id'], int(start), int(end), v['strand'])
                 f2.write(">%s %s %s utr %s %s %s\n%s\n" % (v['gene_name'], v['seq_id'], k, start, end, v['strand'], UTR_seq))
             elif 'five_prime_UTR' in v.keys():
                 start, end = v['five_prime_UTR'].split("_")
                 if v['strand'] == "+":
                     # utr is: 142308542-142308588
-                    start,end = int(end) - 200, int(end)
+                    start, end = int(end) - 200, int(end)
                 else:
                     # utr is 38349825-38350022
-                    start, end = int(start),int(start) + 200
+                    start, end = int(start), int(start) + 200
                 UTR_seq = trim_fasta(fasta_dict, v['seq_id'], int(start), int(end), v['strand'])
                 f2.write(">%s %s %s utr %s %s %s\n%s\n" % (v['gene_name'], v['seq_id'], k, start, end, v['strand'], UTR_seq))
     # print len(gene_dict)
