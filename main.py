@@ -28,7 +28,7 @@ def main():
     argument_dict = {'prefix': prefix, "raw_fastq": raw_fastq}
     print("# step1:cutadapt")
     print("cutadapt -g adapter=ATATCCAGAACCCTGACCCTGCGTACCAGCACAAGTTTGTACAAAAAAGCAGGCTACC -O 10 -o %(prefix)s.p1.fq -r %(prefix)s.p2.fq --info-file=%(prefix)s.cutadapt.log %(raw_fastq)s " % {'raw_fastq': raw_fastq, 'prefix': prefix})
-    print("perl separate_fq.pl %(prefix)s.cutadatp.log %(prefix)s" % argument_dict)
+    print("perl /home/xiaofan/separate_fq.pl %(prefix)s.cutadapt.log %(prefix)s" % argument_dict)
     # get b0005_1.p1.fq b0005_1.p2.fq
 
     print("# step2:igblastn")
@@ -42,8 +42,11 @@ def main():
     print("mixcr analyze shotgun --align \"-OsaveOriginalReads=true\" --species hs --starting-material rna --receptor-type tcr -r %(prefix)s.p1.report %(prefix)s.p1.fq %(prefix)s.p1.mixcr.out" % argument_dict)
     print("mixcr analyze shotgun --align \"-OsaveOriginalReads=true\" --species hs --starting-material rna --receptor-type tcr -r %(prefix)s.p2.report %(prefix)s.p2.fq %(prefix)s.p2.mixcr.out" % argument_dict)
     # return : .report .clna .txt
-    print("mixcr exportReadsForClones -s %(prefix)s.p1.mixcr.out.clna %(prefix)s.p1" % argument_dict)
-    print(  # statistic)
+    print("mixcr exportReadsForClones -s %(prefix)s.p1.mixcr.out.clna %(prefix)s.p1." % argument_dict)
+    print("mixcr exportReadsForClones -s %(prefix)s.p2.mixcr.out.clna %(prefix)s.p2." % argument_dict)
+    print("mkdir -p %(prefix)s && mv %(prefix)s.*.fastq.gz %(prefix)s"% argument_dict)
+    print("perl /home/xiaofan/tcr_pairing.pl %(prefix)s.p1 %(prefix)s.p2 %(prefix)s.pairing.info %(prefix)s.pairing.freq" % argument_dict)
+
 
 if __name__ == '__main__':
     main()
