@@ -57,6 +57,8 @@ def main():
     print("perl /home/xiaofan/tcr_pairing.pl %(prefix_1)s.p1 %(prefix_2)s %(prefix)s.pairing.info %(prefix)s.pairing.freq" % argument_dict)
 
     print("# statistic")
+    print("/cygene/software/annaconda3/bin/Rscript heatmap.R %(prefix)s.pairing.freq"% argument_dict)
+    print("venn")
 
 if __name__ == '__main__':
     main()
