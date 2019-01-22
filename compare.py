@@ -7,8 +7,12 @@ def _argparse():
     parser = argparse.ArgumentParser(description="A Python-Venn")
     parser.add_argument('-a', '--afile', action='store', dest='file1', required=True, help='first file')
     parser.add_argument('-al', action='store', default=1, dest='file1_colum', type=int, help='Set a colum to use, default first line.')
+    parser.add_argument('-sa', '--separatora', action='store', dest='separatora', default='tab', help='separator of first file. choose: tab or space, default [ tab ].')
+    parser.add_argument('-header', action='store_true', dest='header', default=False, help='file with or without header, the first line is header or not.')
+
     parser.add_argument('-b', '--bfile', action='store', dest='file2', required=True, help='second file')
     parser.add_argument('-bl', action='store', default=1, dest='file2_colum', type=int, help='Set a colum to use, default first line.')
+    parser.add_argument('-sb', '--separatorb', action='store', dest='separatorb', default='tab', help='separator of second file. choose: tab or space, default [ tab ].')
 
     parser.add_argument('-c', '--common', action='store_true', dest='common', default=False, help='show common or not. Default [ False ]. show this common result.')
     parser.add_argument('-cname', '--cfilename', action='store', dest='common_op_file', help='You must give a file name when you use this parmarater. must use "-c" simultaneously. will write common result to the file which you give.')
@@ -18,7 +22,6 @@ def _argparse():
     parser.add_argument('-lname', '--lfilename', action='store', dest='leftside_op_file', help='You must give a file name when you use this parmarater. must use "-l" simultaneously. will write leftside result to the file which you give.')
     parser.add_argument('-r', '--rightside', action='store_true', dest='rightside', default=False, help='Show rest of B file. Default [ False ]. Will not print this rightside result.')
     parser.add_argument('-rname', '--rfilename', action='store', dest='rightside_op_file', help='You must give a file name when you use this parmarater. must use "-r" simultaneously. will write rightside result to the file which you give.')
-
     parser.add_argument('-g', '--graph', action='store_true', dest='graph', default=False, help='Draw a venn graph. Default [ False ]. will not print venn graph.')
 
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.1')
@@ -49,11 +52,16 @@ def main():
         parser.error("The -lname argument requires the -l")
     if parser.rightside_op_file and not parser.rightside:
         parser.error("The -rname argument requires the -r")
-
     # deal input file A and B.
     with open(parser.file1, "r") as f1, open(parser.file2, "r") as f2:
-        file_list_a = [line.split()[parser.file1_colum - 1] for line in f1]
-        file_list_b = [line.split()[parser.file2_colum - 1] for line in f2]
+        if parser.separatora == 'tab':
+            file_list_a = [line.rstrip("\n").split("\t")[parser.file1_colum - 1] for line in f1]
+        else:
+            file_list_a = [line.rstrip("\n").replace("\t"," ").split()[parser.file1_colum - 1] for line in f1]
+        if parser.separatorb == 'tab':
+            file_list_b = [line.rstrip("\n").split("\t")[parser.file2_colum - 1] for line in f2]
+        else:
+            file_list_b = [line.rstrip("\n").replace("\t"," ").split()[parser.file2_colum - 1] for line in f2]
 
     number_of_elements_a = len(file_list_a)
     number_of_elements_b = len(file_list_b)
