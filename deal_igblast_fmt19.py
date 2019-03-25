@@ -27,7 +27,7 @@ two_gene = 0
 correct =0
 mismatch =0
 total_read = 0
-with open(igblast_file) as f, open(sys.argv[3],"w") as output_handle :
+with open(igblast_file, "r") as f, open(sys.argv[3],"w") as output_handle :
     for line in f:
         total_read +=1
         line = line.rstrip("\n")
