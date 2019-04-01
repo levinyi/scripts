@@ -4,13 +4,23 @@ from Bio import SeqIO
 import argparse
 import gzip
 '''https://www.jianshu.com/p/22051fc6e0a3'''
+def update_log():
+    '''
+    20190401: replace "@" in fastq id line automatically.
+    20190320: write fastq result to a outputfile.
+    '''
+    pass
+
 
 def deal_fastq(fastq, id_list, file_true):
-    for record in SeqIO.parse(fastq, "fastq"):
-        if record.id in id_list:
-            if file_true == True:
-                SeqIO.write(record, "extract.id.fastq", "fastq")
-            elif file_true == False:
+    if file_true == True:
+        with open("extract.id.fastq","w") as output_handle:
+            for record in SeqIO.parse(fastq, "fastq"):
+                if record.id in id_list:
+                    SeqIO.write(record, output_handle, "fastq")
+    elif file_true == False:
+        for record in SeqIO.parse(fastq, "fastq"):
+            if record.id in id_list:
                 SeqIO.write(record, sys.stdout, "fastq")
 
 
@@ -49,7 +59,7 @@ if sys.argv[1].replace(".gz", "").endswith("fa") or sys.argv[1].replace(".gz", "
 elif sys.argv[1].replace(".gz", "").endswith("fq") or sys.argv[1].replace(".gz", "").endswith("fastq"):
     # read id is a file
     if os.path.isfile(sys.argv[2]) :
-        id_list = [line.rstrip("\n") for line in open(sys.argv[2], "r")]
+        id_list = [line.rstrip("\n").replace("@","") for line in open(sys.argv[2], "r")]
         file_true = True
     # specific read id
     else:
