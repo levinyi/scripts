@@ -1,6 +1,8 @@
 import sys
 import os
 import argparse
+import matplotlib.pyplot as plt
+from matplotlib_venn import venn2
 
 
 def _argparse():
@@ -112,18 +114,12 @@ def main():
             print("File A+B union list:")
             print_to_screen(union)
     if parser.graph:
-        with open("file_a", "w") as f1, open("file_b", "w") as f2:
-            for each in file_list_a:
-                f1.write("%s\n" % each)
-            for each in file_list_b:
-                f2.write("%s\n" % each)
-        try:
-            print("Rscript venn.R file_a file_b")
-            os.system("Rscript venn.R file_a file_b")
-        except:
-            sys.exit(1)
-        finally:
-            pass
-            # os.system("rm file_a file_b")
+        subsets = (len(left_diff),len(right_diff),len(intersection))
+        venn2(subsets)
+        plt.savefig("venn.jpg")
+
+
+
+
 if __name__ == '__main__':
     main()
