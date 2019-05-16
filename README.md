@@ -28,7 +28,7 @@ python Brute_Force_zip.py <your_file.zip>
 
 With this tool you can calculate the intersection(s) of list of elements. It will generate a textual output indicating which elements are in each intersection or are unique to a certain list. Currently you are able to calculate the intersections of at maximum 30 lists.
 
-The graphical output is produced in SVG and PNG format.
+The graphical output is produced in JPG format.
 * related refs: compare.py compare.list_a.txt compare.list_b.txt 
 
 example: 
