@@ -25,6 +25,7 @@ def _argparse():
     parser.add_argument('-r', '--rightside', action='store_true', dest='rightside', default=False, help='Show rest of B file. Default [ False ]. Will not print this rightside result.')
     parser.add_argument('-rname', '--rfilename', action='store', dest='rightside_op_file', help='You must give a file name when you use this parmarater. must use "-r" simultaneously. will write rightside result to the file which you give.')
     parser.add_argument('-g', '--graph', action='store_true', dest='graph', default=False, help='Draw a venn graph. Default [ False ]. will not print venn graph.')
+    parser.add_argument('-gname', '--graphname', action='store', dest='graph_name', help='Out put venn graph name.')
 
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.1')
     return parser.parse_args()
@@ -86,7 +87,8 @@ def main():
     print("Overall number of unique elements: %s" % (len(union)))
     print("\n-----------------------------------------------------\n")
     print("left\tmiddle\tright")
-    print("%s\t%s\t%s\n" % (len(left_diff), len(intersection), len(right_diff)))
+    print("%s\t%s\t%s" % (len(left_diff), len(intersection), len(right_diff)))
+    print("%.2f\t\t%.2f\n" % (float(len(intersection))/(len(intersection)+len(left_diff)),float(len(intersection))/(len(intersection)+len(right_diff))))
 
     # print additional info.
     if parser.common:
@@ -116,7 +118,10 @@ def main():
     if parser.graph:
         subsets = (len(left_diff),len(right_diff),len(intersection))
         venn2(subsets)
-        plt.savefig("venn.jpg")
+        if parser.graph_name:
+            plt.savefig(parser.graph_name)
+        else:
+            plt.savefig("venn.jpg")
 
 
 
