@@ -23,56 +23,53 @@ def print_current_time():
     return time_stamp.strftime('%Y.%m.%d-%H:%M:%S')
 
 
-def addtwodimdict(thedict, key_a, key_b, val):
-    ''' this is a function to add two dimetion dict '''
-    if key_a in thedict:
-        thedict[key_a].update({key_b: val})
-    else:
-        thedict.update({key_a: {key_b: val}})
-    return thedict
-
+def get_handle(file):
+        if os.path.basename(file).endswith("gz"):
+                handle = gzip.open(file, "rU")
+        elif os.path.basename(file).endswith(("fq","fastq")):
+                handle = open(file, "rU")
+        return handle
 
 def main():
     '''docstring for main '''
     parser = _argparse()
-
-    file1 = gzip.open(parser.read1, "r")
-    prefix = parser.prefix
-
+    file1 = get_handle(parser.read1)
     print("%s Reading R1" % print_current_time())
 
-    adict = {}
-    read_list = []
-    for record in SeqIO.parse(file1, "fastq"):
-        adict[record.id] = record
-        read_list.append(record.id)
+    # read1_dict = {}
+    # read_list = []
+    # for record in SeqIO.parse(file1, "fastq"):
+    #     read1_dict[record.id] = record
+    #     read_list.append(record.id)
+
+    read1_dict = {str(record.id): record for record in SeqIO.parse(file1, "fastq")}
     file1.close()
 
     if parser.read2:
         # print_current_time()
         print("%s Reading R2\n" % print_current_time())
+        file2 = get_handle(parser.read2)
+        read2_dict = {str(record.id): record for record in SeqIO.parse(file2, "fastq")}
 
-        bdict = {}
-        file2 = gzip.open(parser.read2, "r")
-        for record in SeqIO.parse(file2, "fastq"):
-            bdict[record.id] = record
+        # for record in SeqIO.parse(file2, "fastq"):
+        #     read2_dict[record.id] = record
         file2.close()
 
-    total_reads_number = len(read_list)
+    total_reads_number = len(read1_dict)
 
     if parser.spec_value:
         number_spec_pct = int(total_reads_number * float(parser.spec_value) / 100)
         if parser.read2:
-            with gzip.open(prefix + "_" + parser.spec_value + "pct_R1.fq.gz", "aw") as f1, gzip.open(prefix + '_' + parser.spec_value + "pct_R2.fq.gz", "aw") as f2:
-                for index, each in enumerate(read_list, 1):
+            with gzip.open(parser.prefix + "_" + str(parser.spec_value) + "pct_R1.fq.gz", "aw") as f1, gzip.open(parser.prefix + '_' + str(parser.spec_value) + "pct_R2.fq.gz", "aw") as f2:
+                for index, each in enumerate(read1_dict, 1):
                     if index <= number_spec_pct:
-                        SeqIO.write(adict[each], f1, "fastq")
-                        SeqIO.write(bdict[each], f2, "fastq")
+                        SeqIO.write(read1_dict[each], f1, "fastq")
+                        SeqIO.write(read2_dict[each], f2, "fastq")
         else:
-            with gzip.open(prefix + "_" + parser.spec_value + "pct_R1.fq.gz", "aw") as f1:
-                for index, each in enumerate(read_list, 1):
+            with gzip.open(parser.prefix + "_" + str(parser.spec_value) + "pct_R1.fq.gz", "aw") as f1:
+                for index, each in enumerate(read1_dict, 1):
                     if index <= number_spec_pct:
-                        SeqIO.write(adict[each], f1, "fastq")
+                        SeqIO.write(read1_dict[each], f1, "fastq")
         print("%s all finished!\n" % print_current_time())
     else:
         number_05pct = int(total_reads_number * 0.05)
@@ -87,45 +84,45 @@ def main():
 
         print("%s writing to fastq...\n" % print_current_time())
         if parser.read2:
-            with gzip.open(prefix + "_05pct_R1.fq.gz", "aw") as f1,  gzip.open(prefix + "_05pct_R2.fq.gz", "aw") as f2,  gzip.open(prefix + "_10pct_R1.fq.gz", "aw") as f3, \
-                    gzip.open(prefix + "_10pct_R2.fq.gz", "aw") as f4,  gzip.open(prefix + "_20pct_R1.fq.gz", "aw") as f5,  gzip.open(prefix + "_20pct_R2.fq.gz", "aw") as f6, \
-                    gzip.open(prefix + "_40pct_R1.fq.gz", "aw") as f7,  gzip.open(prefix + "_40pct_R2.fq.gz", "aw") as f8,  gzip.open(prefix + "_60pct_R1.fq.gz", "aw") as f9, \
-                    gzip.open(prefix + "_60pct_R2.fq.gz", "aw") as f10, gzip.open(prefix + "_80pct_R1.fq.gz", "aw") as f11, gzip.open(prefix + "_80pct_R2.fq.gz", "aw") as f12:
+            with gzip.open(parser.prefix + "_05pct_R1.fq.gz", "aw") as f1,  gzip.open(parser.prefix + "_05pct_R2.fq.gz", "aw") as f2,  gzip.open(parser.prefix + "_10pct_R1.fq.gz", "aw") as f3, \
+                    gzip.open(parser.prefix + "_10pct_R2.fq.gz", "aw") as f4,  gzip.open(parser.prefix + "_20pct_R1.fq.gz", "aw") as f5,  gzip.open(parser.prefix + "_20pct_R2.fq.gz", "aw") as f6, \
+                    gzip.open(parser.prefix + "_40pct_R1.fq.gz", "aw") as f7,  gzip.open(parser.prefix + "_40pct_R2.fq.gz", "aw") as f8,  gzip.open(parser.prefix + "_60pct_R1.fq.gz", "aw") as f9, \
+                    gzip.open(parser.prefix + "_60pct_R2.fq.gz", "aw") as f10, gzip.open(parser.prefix + "_80pct_R1.fq.gz", "aw") as f11, gzip.open(parser.prefix + "_80pct_R2.fq.gz", "aw") as f12:
                 for index, each in enumerate(read_list, 1):
                     if index <= number_05pct:
-                        SeqIO.write(adict[each], f1, "fastq")
-                        SeqIO.write(bdict[each], f2, "fastq")
+                        SeqIO.write(read1_dict[each], f1, "fastq")
+                        SeqIO.write(read2_dict[each], f2, "fastq")
                     if index <= number_10pct:
-                        SeqIO.write(adict[each], f3, "fastq")
-                        SeqIO.write(bdict[each], f4, "fastq")
+                        SeqIO.write(read1_dict[each], f3, "fastq")
+                        SeqIO.write(read2_dict[each], f4, "fastq")
                     if index <= number_20pct:
-                        SeqIO.write(adict[each], f5, "fastq")
-                        SeqIO.write(bdict[each], f6, "fastq")
+                        SeqIO.write(read1_dict[each], f5, "fastq")
+                        SeqIO.write(read2_dict[each], f6, "fastq")
                     if index <= number_40pct:
-                        SeqIO.write(adict[each], f7, "fastq")
-                        SeqIO.write(bdict[each], f8, "fastq")
+                        SeqIO.write(read1_dict[each], f7, "fastq")
+                        SeqIO.write(read2_dict[each], f8, "fastq")
                     if index <= number_60pct:
-                        SeqIO.write(adict[each], f9, "fastq")
-                        SeqIO.write(bdict[each], f10, "fastq")
+                        SeqIO.write(read1_dict[each], f9, "fastq")
+                        SeqIO.write(read2_dict[each], f10, "fastq")
                     if index <= number_80pct:
-                        SeqIO.write(adict[each], f11, "fastq")
-                        SeqIO.write(bdict[each], f12, "fastq")
+                        SeqIO.write(read1_dict[each], f11, "fastq")
+                        SeqIO.write(read2_dict[each], f12, "fastq")
         else:
-            with gzip.open(prefix + "_05pct_R1.fq.gz", "aw") as f1,  gzip.open(prefix + "_10pct_R1.fq.gz", "aw") as f3, gzip.open(prefix + "_20pct_R1.fq.gz", "aw") as f5, \
-                    gzip.open(prefix + "_40pct_R1.fq.gz", "aw") as f7,  gzip.open(prefix + "_60pct_R1.fq.gz", "aw") as f9, gzip.open(prefix + "_80pct_R1.fq.gz", "aw") as f11:
+            with gzip.open(parser.prefix + "_05pct_R1.fq.gz", "aw") as f1,  gzip.open(parser.prefix + "_10pct_R1.fq.gz", "aw") as f3, gzip.open(parser.prefix + "_20pct_R1.fq.gz", "aw") as f5, \
+                    gzip.open(parser.prefix + "_40pct_R1.fq.gz", "aw") as f7,  gzip.open(parser.prefix + "_60pct_R1.fq.gz", "aw") as f9, gzip.open(parser.prefix + "_80pct_R1.fq.gz", "aw") as f11:
                 for index, each in enumerate(read_list, 1):
                     if index <= number_05pct:
-                        SeqIO.write(adict[each], f1, "fastq")
+                        SeqIO.write(read1_dict[each], f1, "fastq")
                     if index <= number_10pct:
-                        SeqIO.write(adict[each], f3, "fastq")
+                        SeqIO.write(read1_dict[each], f3, "fastq")
                     if index <= number_20pct:
-                        SeqIO.write(adict[each], f5, "fastq")
+                        SeqIO.write(read1_dict[each], f5, "fastq")
                     if index <= number_40pct:
-                        SeqIO.write(adict[each], f7, "fastq")
+                        SeqIO.write(read1_dict[each], f7, "fastq")
                     if index <= number_60pct:
-                        SeqIO.write(adict[each], f9, "fastq")
+                        SeqIO.write(read1_dict[each], f9, "fastq")
                     if index <= number_80pct:
-                        SeqIO.write(adict[each], f11, "fastq")
+                        SeqIO.write(read1_dict[each], f11, "fastq")
         print("%s all finished!\n" % print_current_time())
 
 if __name__ == '__main__':
