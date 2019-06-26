@@ -32,72 +32,74 @@ def get_handle(file):
     return handle
 
 
+def parse_se_fastq(fastq1,phred=33):
+    from numpy import fromstring,byte
+    while True:
+        name1 = fastq1.readline().partition(' ')[0]
+        # name2 = fastq2.readline().partition(' ')[0]
+        if not name1 :
+            break
+        read1, nothing1, qual1 = fastq1.readline()[:-1], fastq1.readline(), fastq1.readline()[:-1]
+        # read2, nothing2, qual2 = fastq2.readline()[:-1], fastq2.readline(), fastq2.readline()[:-1]
+        qual1 = fromstring(qual1,dtype=byte)-phred
+        # qual2 = fromstring(qual2,dtype=byte)-phred
+        assert name1 == name2, 'fastq1, fastq2 is not paired-end'
+        yield name1, read1, qual1
+
+def parse_pe_fastq(fastq1,fastq2,phred=33):
+    from numpy import fromstring,byte
+    while True:
+        name1 = fastq1.readline().partition(' ')[0]
+        name2 = fastq2.readline().partition(' ')[0]
+        if not name1 or not name2:
+            break
+        read1, nothing1, qual1 = fastq1.readline()[:-1], fastq1.readline(), fastq1.readline()[:-1]
+        read2, nothing2, qual2 = fastq2.readline()[:-1], fastq2.readline(), fastq2.readline()[:-1]
+        qual1 = fromstring(qual1,dtype=byte)-phred
+        qual2 = fromstring(qual2,dtype=byte)-phred
+        assert name1 == name2, 'fastq1, fastq2 is not paired-end'
+        yield name1, read1, read2, qual1, qual2
+
 def main():
     '''docstring for main '''
     print("%s all start!\n" % print_current_time())
     parser = _argparse()
     file1 = get_handle(parser.read1)
-
     num_lines = sum([1 for line in file1])
     file1.close()
+
     total_reads_number = int(num_lines / 4)
     print("total_reads_number : %s " % total_reads_number)
-    # print("%s Reading R1" % print_current_time())
 
-    # read1_dict = {str(record.id): record for record in SeqIO.parse(file1, "fastq")}
-    # file1.close()
-    # print("%s finish reading R1" % print_current_time())
-
-    # if parser.read2:
-    #     # print_current_time()
-    #     print("%s Reading R2\n" % print_current_time())
-    #     file2 = get_handle(parser.read2)
-    #     read2_dict = {str(record.id): record for record in SeqIO.parse(file2, "fastq")}
-    #     print("%s finish Reading R2\n" % print_current_time())
-
-    #     file2.close()
-
-    # total_reads_number = len(read1_dict)
-
-    # print("%s start write\n" % print_current_time())
     file1 = get_handle(parser.read1)
+    if parser.read2:
+        file2 = get_handle(parser.read2)
+
     if parser.spec_value:
         number_spec_pct = int(total_reads_number * float(parser.spec_value) / 100)
         print("number spec_value : %s " % number_spec_pct)
-        if parser.read2:
-            print("yes")
-            # with gzip.open(parser.prefix + "_" + str(parser.spec_value) + "pct_R1.fq.gz", "aw") as f1, gzip.open(parser.prefix + '_' + str(parser.spec_value) + "pct_R2.fq.gz", "aw") as f2:
-        else:
-            print("no")
+        if parser.read2: # PE read
+            print("your input is PE read!")
+            print("%s : write PE read now." % print_current_time())
+            with gzip.open(parser.prefix + "_" + str(parser.spec_value) + "pct_R1.fq.gz", "aw") as f1, gzip.open(parser.prefix + '_' + str(parser.spec_value) + "pct_R2.fq.gz", "aw") as f2:
+                index = 1
+                for i in parse_pe_fastq(file1,file2):
+                    if index <= number_spec_pct:
+                        name, seq1, seq2, qual1, qual2 = i
+                        f1.write('{name}\n{seq}\n+\n{qual}\n'.format(name=name,seq=seq1,qual=qual1))
+                        f2.write('{name}\n{seq}\n+\n{qual}\n'.format(name=name,seq=seq2,qual=qual2))
+            print("%s : Finished write PE read" print_current_time())
+        else: # SE 
+            print("your input is SE read!")
+            print("write SE read now %s"% print_current_time())
             with gzip.open(parser.prefix + "_" + str(parser.spec_value) + "pct_R1.fq.gz", "w") as f1:
-                print("open a gzip file")
-                print(type(file1))
-
                 for index, line1 in enumerate(file1, 1):
-                    # print index
                     line2 = file1.next()
                     line3 = file1.next()
                     line4 = file1.next()
                     if index <= number_spec_pct:
                         f1.write('{read}\n{seq}\n+\n{qual}\n'.format(read=line1,seq=line2,qual=line4))
-
-        '''
-        if parser.read2:
-            with gzip.open(parser.prefix + "_" + str(parser.spec_value) + "pct_R1.fq.gz", "aw") as f1, gzip.open(parser.prefix + '_' + str(parser.spec_value) + "pct_R2.fq.gz", "aw") as f2:
-                for index, each in enumerate(read1_dict, 1):
-                    if index <= number_spec_pct:
-                        SeqIO.write(read1_dict[each], f1, "fastq")
-                        SeqIO.write(read2_dict[each], f2, "fastq")
-            print("%s finish write\n" % print_current_time())
-        else:
-            with gzip.open(parser.prefix + "_" + str(parser.spec_value) + "pct_R1.fq.gz", "aw") as f1:
-                for index, each in enumerate(read1_dict, 1):
-                    if index <= number_spec_pct:
-                        SeqIO.write(read1_dict[each], f1, "fastq")
-            print("%s finish write\n" % print_current_time())
-        print("%s all finished!\n" % print_current_time())
-        '''
-        
+            print("%s : finish write SE read." % print_current_time())
     else:
         number_05pct = int(total_reads_number * 0.05)
         number_10pct = int(total_reads_number * 0.1)
@@ -109,11 +111,9 @@ def main():
         # print("%s shuffle random list\n" % print_current_time())
         # random.shuffle(read1_li)
         # print("%s finish shuffle random list\n" % print_current_time())
-
+        print("cutting number will be: 5%,10%,20%,40%,60%,80%")
         print("%s writing to fastq...\n" % print_current_time())
         if parser.read2:
-            pass
-            '''
             print("%s open gzip out file\n" % print_current_time())
             with gzip.open(parser.prefix + "_05pct_R1.fq.gz", "aw") as f1,  gzip.open(parser.prefix + "_05pct_R2.fq.gz", "aw") as f2,  gzip.open(parser.prefix + "_10pct_R1.fq.gz", "aw") as f3, \
                     gzip.open(parser.prefix + "_10pct_R2.fq.gz", "aw") as f4,  gzip.open(parser.prefix + "_20pct_R1.fq.gz", "aw") as f5,  gzip.open(parser.prefix + "_20pct_R2.fq.gz", "aw") as f6, \
