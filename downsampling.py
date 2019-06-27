@@ -88,7 +88,7 @@ def main():
                         name, seq1, seq2, qual1, qual2 = i
                         f1.write('{name}\n{seq}\n+\n{qual}\n'.format(name=name,seq=seq1,qual=qual1))
                         f2.write('{name}\n{seq}\n+\n{qual}\n'.format(name=name,seq=seq2,qual=qual2))
-            print("%s : Finished write PE read" print_current_time())
+            print("%s : Finished write PE read" % print_current_time())
         else: # SE 
             print("your input is SE read!")
             print("write SE read now %s"% print_current_time())
@@ -140,7 +140,7 @@ def main():
                     if index <= number_80pct:
                         SeqIO.write(read1_dict[each], f11, "fastq")
                         SeqIO.write(read2_dict[each], f12, "fastq")
-            '''
+
         else:
             print("%s open gzip out file\n" % print_current_time())
             with gzip.open(parser.prefix + "_05pct_R1.fq.gz", "aw") as f1,  gzip.open(parser.prefix + "_10pct_R1.fq.gz", "aw") as f3, gzip.open(parser.prefix + "_20pct_R1.fq.gz", "aw") as f5, \
