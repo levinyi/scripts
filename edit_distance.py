@@ -1,3 +1,4 @@
+import sys
 def minEditDist(sm,sn):
     m,n = len(sm)+1,len(sn)+1
     # create a matrix (m*n)
@@ -25,6 +26,8 @@ def minEditDist(sm,sn):
 #      print matrix[i]
     return matrix[m-1][n-1]
 
-# mindist=minEditDist("TACTA","TCATA")
-# print mindist
+string1 = sys.argv[1]
+string2 = sys.argv[2]
+mindist=minEditDist(string1,string2)
+print mindist
 
