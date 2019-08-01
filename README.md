@@ -55,3 +55,9 @@ This script was used to parser html info that aimed for Fastqc result.
 example: 
 python fastqc_html_parser.py /path/to/html/
 ```
+
+# print Most commonly used commands in Linux
+```
+# just type:
+python print_MCUC.py
+```
