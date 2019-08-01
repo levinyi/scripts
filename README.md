@@ -61,3 +61,11 @@ python fastqc_html_parser.py /path/to/html/
 # just type:
 python print_MCUC.py
 ```
+
+# deal Fastx file
+all scripts are in Fastx dir.
+1. complement and reverse a Fastq file:
+python complement_reverse_Fastq_2_Fastq.py xxx.fq >xxx.complement.reverse.fq 
+
+
+
