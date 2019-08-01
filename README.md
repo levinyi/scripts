@@ -49,3 +49,9 @@ python extract.FastX.py test.fa chr1
 ```
 more detail see: "https://www.jianshu.com/p/22051fc6e0a3"
 
+# parse Fastqc's html
+```
+This script was used to parser html info that aimed for Fastqc result.
+example: 
+python fastqc_html_parser.py /path/to/html/
+```
