@@ -34,8 +34,11 @@ print d('body').html()
 def main():
     """docstring for main"""
     html_files = [item for item in  os.listdir('.') if item.endswith('.html')]
+    p = re.compile(r'')
     for html_file in html_files:
         with open(html_file, "r") as f:
+            for line in f:
+                line = line.split()
 
     
 
