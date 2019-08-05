@@ -31,3 +31,13 @@ p = re.compile(r'')
 d = pq(sys.argv[1])
 print d('body').html()
 
+def main():
+    """docstring for main"""
+    html_files = [item for item in  os.listdir('.') if item.endswith('.html')]
+    for html_file in html_files:
+        with open(html_file, "r") as f:
+
+    
+
+if __name__ == '__main__':
+    main()
