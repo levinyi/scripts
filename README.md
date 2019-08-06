@@ -67,5 +67,9 @@ all scripts are in Fastx dir.
 1. complement and reverse a Fastq file:
 python complement_reverse_Fastq_2_Fastq.py xxx.fq >xxx.complement.reverse.fq 
 
-
+# md5sum check
+```
+normally, use md5sum -c MD5.txt
+sh smart_md5sum_check.sh # this script is a tricks of use md5sum in patch way.
+```
 
