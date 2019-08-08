@@ -1,5 +1,4 @@
-import sys
-import os
+''' these modules were used.'''
 import argparse
 import matplotlib.pyplot as plt
 from matplotlib_venn import venn2
@@ -60,11 +59,11 @@ def main():
         if parser.separatora == 'tab':
             file_list_a = [line.rstrip("\n").split("\t")[parser.file1_colum - 1] for line in f1]
         else:
-            file_list_a = [line.rstrip("\n").replace("\t"," ").split()[parser.file1_colum - 1] for line in f1]
+            file_list_a = [line.rstrip("\n").replace("\t", " ").split()[parser.file1_colum - 1] for line in f1]
         if parser.separatorb == 'tab':
             file_list_b = [line.rstrip("\n").split("\t")[parser.file2_colum - 1] for line in f2]
         else:
-            file_list_b = [line.rstrip("\n").replace("\t"," ").split()[parser.file2_colum - 1] for line in f2]
+            file_list_b = [line.rstrip("\n").replace("\t", " ").split()[parser.file2_colum - 1] for line in f2]
 
     number_of_elements_a = len(file_list_a)
     number_of_elements_b = len(file_list_b)
@@ -88,7 +87,7 @@ def main():
     print("\n-----------------------------------------------------\n")
     print("left\tmiddle\tright")
     print("%s\t%s\t%s" % (len(left_diff), len(intersection), len(right_diff)))
-    print("%.2f\t\t%.2f\n" % (float(len(intersection))/(len(intersection)+len(left_diff)),float(len(intersection))/(len(intersection)+len(right_diff))))
+    print("%.2f\t\t%.2f\n" % (float(len(intersection))/(len(intersection)+len(left_diff)), float(len(intersection))/(len(intersection)+len(right_diff))))
 
     # print additional info.
     if parser.common:
@@ -116,15 +115,12 @@ def main():
             print("File A+B union list:")
             print_to_screen(union)
     if parser.graph:
-        subsets = (len(left_diff),len(right_diff),len(intersection))
+        subsets = (len(left_diff), len(right_diff), len(intersection))
         venn2(subsets)
         if parser.graph_name:
             plt.savefig(parser.graph_name)
         else:
             plt.savefig("venn.jpg")
-
-
-
 
 if __name__ == '__main__':
     main()
