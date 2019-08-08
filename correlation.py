@@ -1,4 +1,4 @@
-import sys
+''' these modules were used.'''
 import os
 import argparse
 from itertools import islice
@@ -26,14 +26,10 @@ def deal_file(f, k, v, s, header):
     a_list = []
     with open(f, "r") as f1:
         if header:
-            for line in islice(f1,1,None):
+            for line in islice(f1, 1, None):
                 line = line.rstrip("\n")
                 if s == 'tab':
                     c = line.split("\t")
-                else:
-                    c = line.split()
-
-                a_dict[c[int(k) - 1]] = c[int(v) - 1]
                 a_list.append(c[int(k) - 1])
         else:
             for line in f1:
@@ -59,12 +55,9 @@ def main():
     print("names\t%s\t%s" % (file1_name, file2_name))
 
     intersection = list(set(file1_list).intersection(set(file2_list)))
-    
+
     for index, each in enumerate(intersection, 1):
         print("%s\t%s\t%s" % (index, file1_dict[each], file2_dict[each]))
-    ''' 
-    for index, each in enumerate(intersection, 1):
-        print("%s\t%s\t%s" % (each, file1_dict[each], file2_dict[each]))
-    '''
+
 if __name__ == '__main__':
     main()
