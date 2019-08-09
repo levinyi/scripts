@@ -1,11 +1,17 @@
-import sys
-import os
+''' this is module description'''
 import argparse
 import re
 import gzip
 from Bio import SeqIO
 
 
+def usage():
+    """
+    docstring for usage
+    python extract.gff.py -g gfffile -f fasta 
+
+    """
+    
 def _argparse():
     parser = argparse.ArgumentParser(description='This is description')
     parser.add_argument('-g', '--gff', action='store', dest='gff', help='help info')
