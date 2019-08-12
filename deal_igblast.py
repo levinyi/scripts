@@ -1,11 +1,4 @@
-"""
-Deal igblast result
-"""
-
-# Info
-__author__ = 'Shiyi Du'
-
-# Imports
+""" Deal igblast result """
 import sys
 import os
 
@@ -13,10 +6,6 @@ import os
 if sys.version_info < (2, 7, 0):
     sys.exit('At least Python 3.4.0 is required.\n')
 
-try:
-    from Bio import SeqIO
-except ImportError:
-    sys.exit('Please install Biopython before run this script\n')
 
 # Get version, author and license information
 info_file = os.path.join('/cygene/script', 'Version.py')
@@ -53,7 +42,6 @@ for each_file in igblast_out:
                     # this is a forword read_id
                     result_dict.setdefault(read_id, []).append(gene)
 
-with open(sys.argv[-1],"w") as output:
+with open(sys.argv[-1], "w") as output:
     for k, v in result_dict.items():
-        # if 'TRAV' in ''.join(v) and 'TRBV' in ''.join(v) and 'TRAJ' in ''.join(v) and 'TRBJ' in ''.join(v):
-        output.write("%s\t%s\t%s\n"%(k,len(v),v))
+        output.write("%s\t%s\t%s\n" % (k, len(v), v))
