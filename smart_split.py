@@ -9,7 +9,7 @@ def main():
     parser.add_argument("-b", "--line", type=int, help="how many lines in one")
     args = parser.parse_args()
 
-    for i in range(1, args.total_number):
+    for i in range(1, args.total_nu):
         if args.total_nu % (args.line*i) == 0:
             print args.line*i, args.total_nu/(args.line*i)
 
