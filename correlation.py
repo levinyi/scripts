@@ -17,6 +17,7 @@ def _argparse():
     parser.add_argument('-kb', '--key_b', action='store', dest='key_b', default=1, help="this is the key of file")
     parser.add_argument('-vb', '--value_b', action='store', dest='value_b', default=2, help="this is the value of file B's colume.")
     parser.add_argument('-sb', '--separatorb', action='store', dest='separatorb', default='tab', help='separator of first file. choose: [tab] or [space], default [ tab ].')
+    parser.add_argument('-u', '--union', action='store_true', dest='union', default=False, help='show union list')
     return parser.parse_args()
 
 
@@ -30,6 +31,9 @@ def deal_file(f, k, v, s, header):
                 line = line.rstrip("\n")
                 if s == 'tab':
                     c = line.split("\t")
+                else:
+                    c = line.split()
+                a_dict[c[int(k) - 1]] = c[int(v) - 1]
                 a_list.append(c[int(k) - 1])
         else:
             for line in f1:
@@ -54,10 +58,14 @@ def main():
 
     print("names\t%s\t%s" % (file1_name, file2_name))
 
-    intersection = list(set(file1_list).intersection(set(file2_list)))
-
-    for index, each in enumerate(intersection, 1):
-        print("%s\t%s\t%s" % (index, file1_dict[each], file2_dict[each]))
+    if parser.union:
+        union_set = list(set(file1_list).union(set(file2_list)))
+        for index, each in enumerate(union_set, 1):
+            print("{0}\t{1}\t{2}".format(index, file1_dict.get(each, 0), file2_dict.get(each, 0)))
+    else:
+        intersection = list(set(file1_list).intersection(set(file2_list)))
+        for index, each in enumerate(intersection, 1):
+            print("%s\t%s\t%s" % (index, file1_dict[each], file2_dict[each]))
 
 if __name__ == '__main__':
     main()
