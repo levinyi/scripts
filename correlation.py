@@ -61,11 +61,13 @@ def main():
     if parser.union:
         union_set = list(set(file1_list).union(set(file2_list)))
         for index, each in enumerate(union_set, 1):
-            print("{0}\t{1}\t{2}".format(index, file1_dict.get(each, 0), file2_dict.get(each, 0)))
+            #print("{0}\t{1}\t{2}".format(index, file1_dict.get(each, 0), file2_dict.get(each, 0)))
+            print("{0}\t{1}\t{2}".format(each, file1_dict.get(each, 0), file2_dict.get(each, 0)))
     else:
         intersection = list(set(file1_list).intersection(set(file2_list)))
         for index, each in enumerate(intersection, 1):
-            print("%s\t%s\t%s" % (index, file1_dict[each], file2_dict[each]))
+            #print("%s\t%s\t%s" % (index, file1_dict[each], file2_dict[each]))
+            print("%s\t%s\t%s" % (each, file1_dict[each], file2_dict[each]))
 
 if __name__ == '__main__':
     main()
