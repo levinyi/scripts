@@ -1,4 +1,5 @@
 ''' these modules were used.'''
+import os
 import argparse
 import matplotlib.pyplot as plt
 from matplotlib_venn import venn2
@@ -115,8 +116,10 @@ def main():
             print("File A+B union list:")
             print_to_screen(union)
     if parser.graph:
+        name1 = os.path.basename(parser.file1).split(".")[0]
+        name2 = os.path.basename(parser.file2).split(".")[0]
         subsets = (len(left_diff), len(right_diff), len(intersection))
-        venn2(subsets)
+        venn2(subsets, set_labels=(name1, name2))
         if parser.graph_name:
             plt.savefig(parser.graph_name)
         else:
