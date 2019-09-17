@@ -21,7 +21,12 @@ Brute_Force_zip.py is a script that can brute force zip file while using the pas
 
 example:
 ```
-python Brute_Force_zip.py <your_file.zip>
+zip -q -r  -P 19910319 G17E2L1_R1_10pct_R1.fq.zip G17E2L1_R1_10pct_R1.fq.gz
+
+python Brute_Force_zip.py -f <your_file.zip> -d <password.txt>
+$ python Brute_Force_zip.py -f G17E2L1_R1_10pct_R1.fq.zip -d password.txt
+('Found Passwd : ', '19910319')
+
 ```
 
 # Compared two files:
