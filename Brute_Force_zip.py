@@ -6,19 +6,6 @@ ZIP压缩文件破解程序加强版， 用户可以自己制定想要破解的�
 
 import zipfile
 import optparse
-
-"""
-f = zipfile.ZipFile(sys.argv[1])
-f.extractall(pwd='error')
-with open('passwords.txt', "r") as pf:
-    for line in pf:
-        try:
-            f.extractall(pwd=line.strip())
-            print("password is {0}".format(line.strip()))
-        except:
-            pass
-
-"""
 import threading
 
 def extractFile(zFile, password):
