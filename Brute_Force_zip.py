@@ -8,7 +8,9 @@ import zipfile
 import optparse
 import threading
 
+
 def extractFile(zFile, password):
+    """ extract zFile """
     try:
         zFile.extractall(pwd=password)
         print("Found Passwd : ", password)
@@ -16,13 +18,14 @@ def extractFile(zFile, password):
     except:
         pass
 
+
 def main():
     parser = optparse.OptionParser('usage%prog -f <zipfile> -d <dictionary>')
-    parser.add_option('-f', dest='zname', type='string', help='specify zip file')
-    parser.add_option('-d', dest='dname', type='string', help='specify dictionary file')
+    parser.add_option('-f', dest='zname', type='string', help='zip file')
+    parser.add_option('-d', dest='dname', type='string', help='passwd file')
 
     options, args = parser.parse_args()
-    if options.zname == None or options.dname== None:
+    if options.zname is None or options.dname is None:
         print(parser.usage)
         exit(0)
     else:
@@ -36,6 +39,7 @@ def main():
         t = threading.Thread(target=extractFile, args=(zFile, password))
         t.start()
         """
+        # for single threshhold.
         guess = extractFile(zFile, password)
         if guess:
             print('Password = ', password)
@@ -44,5 +48,6 @@ def main():
             print("can't find password")
             return
         """
+
 if __name__ == '__main__':
     main()
