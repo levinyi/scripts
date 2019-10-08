@@ -66,8 +66,8 @@ def main():
     file2_dict, file2_list = deal_file(parser.file2, parser.key_b, parser.value_b, parser.separatorb, parser.headerb)
     
     if parser.freq:
-        file1_dict = dict_freqency(file1_dict)
-        file2_dict = dict_freqency(file2_dict)
+        file1_dict = dict_freqency(file1_dict)  # recover the fomer dict.
+        file2_dict = dict_freqency(file2_dict)  # recover the fomer dict.
 
     print("names\t%s\t%s" % (file1_name, file2_name))
 
