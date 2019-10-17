@@ -18,5 +18,6 @@ def dna_reverse(sequence):
     return sequence[::-1]
 
 DNA = sys.argv[1]
-print dna_reverse(DNA)
-print dna_reverse(dna_complement(DNA))
+print "complement:",dna_complement(DNA)
+print "reverse   :",dna_reverse(DNA)
+print "compl_reve:",dna_reverse(dna_complement(DNA))
