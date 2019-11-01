@@ -78,3 +78,14 @@ normally, use md5sum -c MD5.txt
 sh smart_md5sum_check.sh # this script is a tricks of use md5sum in patch way.
 ```
 
+# raster2matrix
+```
+this is the raster2matrix converting
+see : xxxxx
+```
+
+# matrix2raster
+```
+this the script that converting matrix2raster
+see: xxxxx
+```
