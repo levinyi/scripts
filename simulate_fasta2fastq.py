@@ -13,7 +13,7 @@ def Usage():
     print """
 Program: %s
 Version: 1.0
-Contact: dushiyi@genomics.cn
+Contact: dushiyi319@163.com
 updated: March 16 2018 created.
 Description:
   Trim fastq reads.
