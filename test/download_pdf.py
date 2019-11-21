@@ -4,9 +4,13 @@ import requests
 from bs4 import BeautifulSoup
 
 
-# url = "https://www.physicsandmathstutor.com/chemistry-revision/a-level-edexcel-ial/unit-5/"
 url = sys.argv[1]
-html = requests.get(url)
+
+# url = "https://www.physicsandmathstutor.com/chemistry-revision/a-level-edexcel-ial/unit-5/"
+try:
+    html = requests.get(url)
+except requests.exceptions.ConnectionError:
+    html.status_code = "Connection refused"
 
 if html.status_code == 200:
     soup = BeautifulSoup(html.text, "html.parser")
@@ -17,8 +21,8 @@ if html.status_code == 200:
             if os.path.exists(pdf_name):
                 pdf_name = pdf_name.replace(".pdf","_1.pdf")
             
-            # print pdf_name
-            
+            print pdf_name
+            '''
             pdf_r = requests.get(new_link,stream=True,verify=False)
 
             with open(pdf_name, "wb") as pdf_file:
@@ -26,3 +30,4 @@ if html.status_code == 200:
                     if chunk: # filter out keep-alive new chunks
                         pdf_file.write(chunk)
                         pdf_file.flush()
+            '''
