@@ -10,7 +10,7 @@ def TimeStampToTime(timestamp):
     """docstring for TimeStampToTime"""
     timeStruct = time.localtime(timestamp)
     return time.strftime('%Y-%m-%d %H:%M:%S', timeStruct)
-    
+
 
 def get_scripts(currentPath):
     """docstring for get_scripts"""
@@ -27,7 +27,7 @@ def get_Total_script_number(alist):
     number_list = []
     for each_file in alist:
         file_number = os.popen("wc -l {}".format(each_file)).read().split()[0]
-        number_list.append( int(file_number) )
+        number_list.append(int(file_number))
 
     list_a = np.array(number_list).tolist()
     max_index = list_a.index(max(list_a))
@@ -66,7 +66,7 @@ def main():
         # print("your input_dir is {}".format(os.path.abspath(each)))
         each_scripts_list = get_scripts(each)
         scripts_list.extend(each_scripts_list)
-    
+
     # ## Answer First Question:
     total_file = len(scripts_list)
     print("1.这一年你写了{}个脚本".format(total_file))
