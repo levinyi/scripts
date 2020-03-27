@@ -19,7 +19,7 @@ def _argparse():
     parser.add_argument('-sb', '--separatorb', action='store', dest='separatorb', default='tab', help='separator of first file. choose: [tab] or [space], default [ tab ].')
     
     parser.add_argument('-u', '--union', action='store_true', dest='union', default=False, help='show union list')
-    parser.add_argument('-f', '--freq',  action='store_true', dest='freq', default= False, help='calculate frequency for each value.')
+    parser.add_argument('-f', '--freq',  action='store_true', dest='freq', default= False, help='calculate frequency of total value for each value in each file. Not ratio of two values.')
 
     return parser.parse_args()
 
