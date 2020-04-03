@@ -1,11 +1,18 @@
 import os
 import sys
 from Bio import SeqIO
-import argparse
 import gzip
 '''https://www.jianshu.com/p/22051fc6e0a3'''
+
+
 def update_log():
     '''
+    https://www.jianshu.com/p/22051fc6e0a3
+    Usage:
+        python /extract.FastX.py genome_modify_mutation.fa chr22 20792022 20792032
+    
+    Updates:
+    20200402: updated for python3
     20190401: replace "@" in fastq id line automatically.
     20190320: write fastq result to a outputfile.
     '''
@@ -27,9 +34,11 @@ def deal_fastq(fastq, id_list, file_true):
 def deal_fasta(fasta, chrome, flag, start=0, end=0):
     for record in SeqIO.parse(fasta, "fasta"):
         if record.id == chrome and flag == 'Ture':
-            print record.seq[start - 1: end]  # start include; ends exclude
+            print (record.seq[start - 1: end])  # start include; ends exclude
+            break
         elif record.id == chrome and flag == 'False':
-            print record.seq
+            print (record.seq)
+            break
 
 # check file header.
 if sys.argv[1].endswith(".gz"):
