@@ -2,6 +2,7 @@
 import os
 import argparse
 import matplotlib.pyplot as plt
+plt.switch_backend('agg')
 from matplotlib_venn import venn2
 
 
