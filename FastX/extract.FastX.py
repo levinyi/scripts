@@ -1,8 +1,6 @@
 import os
 import sys
 from Bio import SeqIO
-import gzip
-'''https://www.jianshu.com/p/22051fc6e0a3'''
 
 
 def update_log():
@@ -42,6 +40,7 @@ def deal_fasta(fasta, chrome, flag, start=0, end=0):
 
 # check file header.
 if sys.argv[1].endswith(".gz"):
+    import gzip
     header = gzip.open(sys.argv[1], "r")
 else:
     header = open(sys.argv[1], "r")
