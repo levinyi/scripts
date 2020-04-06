@@ -1,5 +1,6 @@
 import sys
 import pandas as pd
+import argparse
 
 
 def _argparse():
@@ -16,7 +17,6 @@ def _argparse():
 def main():
     """docstring for main"""
     input_file = sys.argv[1]
-    names = ('Clone', 'counts', 'well')
     # data = pd.read_table(input_file, sep="\t", header=None)
     # data = pd.read_table(input_file, sep="\t", names=names)
     data = pd.read_table(input_file, names=["Clone", "Count","Well"])
@@ -30,14 +30,9 @@ def main():
         values = ["Count"],
         fill_value=0,
         )
-########### method 1
     df1.columns = df1.columns.droplevel(0)
     df1.columns.name = None
 
-########### method 2
-# df1 = df1.rename_axis(None, axis=1).reset_index()
-
-    print(df1.head(2))
     output_file = sys.argv[2]
     df1.to_csv(output_file)
 
