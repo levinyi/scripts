@@ -8,4 +8,4 @@ with open(os.path.expanduser('~/.bash_history'),"r") as f:
         cmd = line.strip().split()
         if cmd:
             c[cmd[0]] +=1
-print c.most_common(20)
+print(c.most_common(20))
