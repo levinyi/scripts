@@ -26,10 +26,11 @@ def usage():
 
     """
     
-
+'''
 p = re.compile(r'')
 d = pq(sys.argv[1])
 print d('body').html()
+'''
 
 def main():
     """docstring for main"""
@@ -39,6 +40,7 @@ def main():
         with open(html_file, "r") as f:
             for line in f:
                 line = line.split()
+                match = p.match(line)
 
     
 
