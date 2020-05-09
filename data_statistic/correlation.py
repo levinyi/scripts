@@ -4,18 +4,24 @@ import argparse
 from itertools import islice
 
 
+def updates_info():
+    '''
+    updates:
+    20200509: add 'all' to value column of each file.
+    20200508: updates: for added comma split.
+    '''
 def _argparse():
     parser = argparse.ArgumentParser(description="More description see: https://www.jianshu.com/p/66c0448f44f3")
     parser.add_argument('-a', '--filea', action='store', dest='file1', help="this is config file")
     parser.add_argument('-ka', '--key_a', action='store', dest='key_a', default=1, help="this is the key of filea colume.")
-    parser.add_argument('-va', '--value_a', action='store', dest='value_a', default=2, help="this is the value of file A's colume.")
-    parser.add_argument('-sa', '--separatora', action='store', dest='separatora', default='tab', help='separator of first file. choose: [tab] or [space], default [ tab ].')
+    parser.add_argument('-va', '--value_a', action='store', dest='value_a', default=2, help="this is the column number of file A's value. And use [all] to show all line.")
+    parser.add_argument('-sa', '--separatora', action='store', dest='separatora', default='tab', help='separator of first file. choose: [tab] or [space],or [comma] means ",", default [ tab ].')
     parser.add_argument('-headera', action='store_true', dest='headera', default=False, help='file with or without header, the first line is header or not.')
     parser.add_argument('-headerb', action='store_true', dest='headerb', default=False, help='file with or without header, the first line is header or not.')
 
     parser.add_argument('-b', '--fileb', action='store', dest='file2', help="this is list file")
     parser.add_argument('-kb', '--key_b', action='store', dest='key_b', default=1, help="this is the key of file")
-    parser.add_argument('-vb', '--value_b', action='store', dest='value_b', default=2, help="this is the value of file B's colume.")
+    parser.add_argument('-vb', '--value_b', action='store', dest='value_b', default=2, help="this is the colum number of file B's value. and use [all] to show all line.")
     parser.add_argument('-sb', '--separatorb', action='store', dest='separatorb', default='tab', help='separator of first file. choose: [tab] or [space], default [ tab ].')
     
     parser.add_argument('-u', '--union', action='store_true', dest='union', default=False, help='show union list')
@@ -34,18 +40,28 @@ def deal_file(f, k, v, s, header):
                 line = line.rstrip("\n")
                 if s == 'tab':
                     c = line.split("\t")
+                elif s == 'comma':
+                    c = line.split(",")
                 else:
                     c = line.split()
-                a_dict[c[int(k) - 1]] = c[int(v) - 1]
+                if v == 'all':
+                    a_dict[c[int(k) - 1]] = line
+                else:
+                    a_dict[c[int(k) - 1]] = c[int(v) - 1]
                 a_list.append(c[int(k) - 1])
         else:
             for line in f1:
                 line = line.rstrip("\n")
                 if s == 'tab':
                     c = line.split("\t")
+                elif s == 'comma':
+                    c = line.split(",")
                 else:
                     c = line.split()
-                a_dict[c[int(k) - 1]] = c[int(v) - 1]
+                if v == 'all':
+                    a_dict[c[int(k) - 1]] = line
+                else:
+                    a_dict[c[int(k) - 1]] = c[int(v) - 1]
                 a_list.append(c[int(k) - 1])
     return a_dict, a_list
 
@@ -81,6 +97,7 @@ def main():
         for index, each in enumerate(intersection, 1):
             # print("%s\t%s\t%s" % (index, file1_dict[each], file2_dict[each]))
             print("%s\t%s\t%s" % (each, file1_dict[each], file2_dict[each]))
+
 
 if __name__ == '__main__':
     main()
