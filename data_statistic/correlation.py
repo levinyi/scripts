@@ -44,10 +44,12 @@ def deal_file(f, k, v, s, header):
                     c = line.split(",")
                 else:
                     c = line.split()
+
                 if v == 'all':
                     a_dict[c[int(k) - 1]] = line
                 else:
                     a_dict[c[int(k) - 1]] = c[int(v) - 1]
+
                 a_list.append(c[int(k) - 1])
         else:
             for line in f1:
