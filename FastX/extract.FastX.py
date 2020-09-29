@@ -10,6 +10,7 @@ def update_log():
         python /extract.FastX.py genome_modify_mutation.fa chr22 20792022 20792032
     
     Updates:
+    20200925: add "fna" format for fasta. optmized code.
     20200402: updated for python3
     20190401: replace "@" in fastq id line automatically.
     20190320: write fastq result to a outputfile.
@@ -46,7 +47,7 @@ else:
     header = open(sys.argv[1], "r")
 
 # input is fasta format.
-if sys.argv[1].replace(".gz", "").endswith("fa") or sys.argv[1].replace(".gz", "").endswith("fasta"):
+if sys.argv[1].replace(".gz", "").endswith(("fa","fasta","fna")):
     # extract specific region sequence.
     if len(sys.argv) == 5:
         flag = 'Ture'
@@ -64,7 +65,7 @@ if sys.argv[1].replace(".gz", "").endswith("fa") or sys.argv[1].replace(".gz", "
         sys.exit("error with input format. see example.")
 
 # input is fastq format
-elif sys.argv[1].replace(".gz", "").endswith("fq") or sys.argv[1].replace(".gz", "").endswith("fastq"):
+elif sys.argv[1].replace(".gz", "").endswith(("fq","fastq")):
     # read id is a file
     if os.path.isfile(sys.argv[2]) :
         id_list = [line.rstrip("\n").replace("@","") for line in open(sys.argv[2], "r")]
