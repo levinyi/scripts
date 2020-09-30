@@ -1,5 +1,6 @@
 ''' these modules were used.'''
 import os
+import sys
 import argparse
 from itertools import islice
 
@@ -11,7 +12,7 @@ def updates_info():
     20200508: updates: for added comma split.
     '''
 def _argparse():
-    parser = argparse.ArgumentParser(description="More description see: https://www.jianshu.com/p/66c0448f44f3")
+    parser = argparse.ArgumentParser(description="More description see: https://www.jianshu.com/p/66c0448f44f3", prog="PROG")
     parser.add_argument('-a', '--filea', action='store', dest='file1', help="this is config file")
     parser.add_argument('-ka', '--key_a', action='store', dest='key_a', default=1, help="this is the key of filea colume.")
     parser.add_argument('-va', '--value_a', action='store', dest='value_a', default=2, help="this is the column number of file A's value. And use [all] to show all line.")
@@ -76,6 +77,9 @@ def dict_freqency(adict):
 
 def main():
     parser = _argparse()
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
 
     file1_name = os.path.basename(parser.file1).split(".")[0]
     file2_name = os.path.basename(parser.file2).split(".")[0]
