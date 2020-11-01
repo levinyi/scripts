@@ -61,12 +61,7 @@ def main():
             else:
                 print("{}\t{}\t{}".format(geneid, "NA", c[1]))
 
-    '''
-    geneid_file = pd.read_table(input_file, sep="\t")
-    for index, row in iterrows():
-        if row[0] in database[,"Ensembl_gene_identifier"]:
-            print(database)
-    '''
+    
 
 if __name__ == '__main__':
     main()
