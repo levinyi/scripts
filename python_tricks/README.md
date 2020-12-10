@@ -205,9 +205,9 @@ False
 ```
 
 ### Key Takeaways
-• Everything in Python is an object, including functions. You can assign them to variables, store them in data structures, and pass or return them to and from other functions (first-class functions.)
-• First-class functions allow you to abstract away and pass around behavior in your programs.
-• Functions can be nested and they can capture and carry some of the parent function’s state with them. Functions that do this are called closures.
-• Objects can be made callable. In many cases this allows you to treat them like functions.
+*   Everything in Python is an object, including functions. You can assign them to variables, store them in data structures, and pass or return them to and from other functions (first-class functions.)
+*   First-class functions allow you to abstract away and pass around behavior in your programs.
+*   Functions can be nested and they can capture and carry some of the parent function’s state with them. Functions that do this are called closures.
+*   Objects can be made callable. In many cases this allows you to treat them like functions.
 
 ############ 10/12/2020 Levin du
