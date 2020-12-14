@@ -210,4 +210,60 @@ False
 *   Functions can be nested and they can capture and carry some of the parent function’s state with them. Functions that do this are called closures.
 *   Objects can be made callable. In many cases this allows you to treat them like functions.
 
-############ 10/12/2020 Levin du
+############ 10/12/2020 
+
+### 3.2 Lambdas Are Sinngle-Expression Functions
+The lambda keyword in Python provides a shortcut for declaring small anonymous functions. Lambda functions behave just like regular functions declared with the def keyword. They can be used whenever function objects are required.
+
+For example, this is how you'd define a simple lambda function carrying out an addition:
+```
+>>> add = lambda x, y : x + y
+>>> add(5,3)
+8
+```
+You could declare the same add function with the def keyword, but it would be slightly more verbose:
+```
+>>> def add(x, y):
+...     return x + y
+...
+>>> add(5,3)
+8
+```
+
+Now you might be wondering, "Why the big fuss about lambdas? If they're just a slightly more concise version of declaring functions with def, what's the big deal?"
+
+Take a look at the following example and keep the words function expression in your head while you do that:
+```
+>>> (lambda x, y: x + y)(5, 3)
+8
+```
+Okay, what happened here? I just used lambda to define an "add" function inline and then immediately called it with the arguments 5 and 3.
+
+Conceptually, the lambda expression lambda x, y: x + y is the same as declaring a function with def, but just written inline. THe key difference here is that I didn't have to bind the function object to a name before U used it. I simply stated the expression I wanted to compute as part of a lambda, and then immediately evaluated it by calling the lambda expression like a regular function.
+
+Before you move on, you might want to play with the previous code example a little to really let the meaning of it sink in. I still remember this taking me awhile to wrap my head around. So don't worry spending a few minutes in an interpreter session on this. I'll be worth it.
+
+There's another syntactic difference between lambdas and regular function definitions. Lambda functions are restricted to a single expression. This means a lambda function can't use statements or annotations --not even a return statement.
+
+How do you return values from lambdas then? Executing a lambda function evaluates its expression and then automatically returns the expression's result, so there's always an implicit return statement. That's why some people refer to lambdas as single expression functions.
+
+### Lambdas You Can Use
+
+When should you use lambda functions in your code? Technically, any time you're expected to supply a function object you can use a lambda expression. And because lambdas can be anonymous, you don't even need to assign them to a name first.
+
+This can provide a handy and "unbureaucratic" shortcut to defining a function in Python. My most frequent use case for lambdas is writing short and concise key funcs for sorting iterables by an alternate key:
+```
+>>> tuples = [(1, 'd'), (2, 'b'), (4, 'a'), (3, 'c')]
+>>> sorted(tuples, key=lambda x: x[1])
+[(4, 'a'), (2, 'b'), (3, 'c'), (1, 'd')]
+```
+In the above example, we’re sorting a list of tuples by the second value in each tuple. In this case, the lambda function provides a quick way to modify the sort order. Here’s another sorting example you can play with:
+
+```
+>>> sorted(range(-5,6), key=lambda x: x*x)
+[0, -1, 1, -2, 2, -3, 3, -4, 4, -5, 5]
+```
+
+Both examples I showed you have more concise implementations in Python using the built-in operator.itemgetter() and abs() functions. But I hope you can see how using a lambda gives you much more flexibility. Want to sort a sequence by some arbitrary computed key? No problem. Now you know how to do it.
+
+###################################### 20201214 Levin
