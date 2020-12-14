@@ -9,12 +9,12 @@ from matplotlib_venn import venn2
 def _argparse():
     parser = argparse.ArgumentParser(description="A Python-Venn")
     parser.add_argument('-a', '--afile', action='store', dest='file1', required=True, help='first file')
-    parser.add_argument('-al', action='store', default=1, dest='file1_colum', type=int, help='Set a colum to use, default first line.')
+    parser.add_argument('-al', action='store', default=1, dest='file1_colum', type=int, help='Set a colum to use, default [first column].')
     parser.add_argument('-sa', '--separatora', action='store', dest='separatora', default='tab', help='separator of first file. choose: tab or space, default [ tab ].')
     parser.add_argument('-header', action='store_true', dest='header', default=False, help='file with or without header, the first line is header or not.')
 
     parser.add_argument('-b', '--bfile', action='store', dest='file2', required=True, help='second file')
-    parser.add_argument('-bl', action='store', default=1, dest='file2_colum', type=int, help='Set a colum to use, default first line.')
+    parser.add_argument('-bl', action='store', default=1, dest='file2_colum', type=int, help='Set a colum to use, default [first column].')
     parser.add_argument('-sb', '--separatorb', action='store', dest='separatorb', default='tab', help='separator of second file. choose: tab or space, default [ tab ].')
 
     parser.add_argument('-c', '--common', action='store_true', dest='common', default=False, help='show common or not. Default [ False ]. show this common result.')
