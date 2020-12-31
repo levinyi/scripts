@@ -1,0 +1,281 @@
+# 0 - 模块区
+from tkinter import *
+import tkinter.messagebox
+
+# 1 - 参数区
+
+# 2 - 函数区
+def horizontal_search(rg, j):
+    ...
+def vertical_search(rg, i):
+    ...
+def slant_search(rg):
+    ...
+
+# 3 - 猪蹄区
+class CanvasDemo(object):
+    def __init__(self):
+        ...
+
+    @staticmethod
+    def gameover(cur_x, cur_y):
+        ...
+
+    def ai(self):
+        ...
+
+    def paint(self, event):
+        ...
+
+# 4 - 区
+if __name__ == '__main__':
+   CanvasDemo()
+
+作者：陈泽光
+链接：https://www.zhihu.com/question/20799742/answer/273960014
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+cur_num = 1
+code = ""
+size = 15
+neighbor_color = 0
+best_x = 1
+best_y = 1
+
+chess = [[0 for col in range(size+1)] for row in range(size+1)]
+chess_Value = [[0 for val_col in range(size+1)] for val_rows in range(size+1)]
+
+dic = {"0": 0, "1": 8, "2": 10, "11": 50, "22": 1000, "111": 2500, "222": 3000, "1111": 5000, "2222": 20000,"21": 4, "12": 2, "211": 25, "122": 20, "11112": 3000, "112": 30, "1112": 2800, "221": 500, "2221": 2000,"22221": 10000}
+
+作者：陈泽光
+链接：https://www.zhihu.com/question/20799742/answer/273960014
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+作者：陈泽光
+链接：https://www.zhihu.com/question/20799742/answer/273960014
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+稍微说明一下，在初号机中，我们分别初始化了:当前落子方的编号;用于记录棋型的字符串;棋盘的大小;某一点某个方位最近邻的棋子颜色;最佳落点的横，纵坐标。接下来两个列表分别用于:记录棋盘状态;游戏过程中每个可能落点的价值。最后的字典记录了每种棋型对应的分值，大家可以根据自己的感觉修改对应棋型的分值。接下来的三个函数分别计算了每个可能落点横向、纵向和斜向的分值，之后我们会把这些分值相加作为该点的最终得分记录下来。# 水平方向搜索
+def horizontal_search(rg, j):
+   s_code = ""
+   color = 0
+   for x in rg:
+       if chess[x][j] == 0:
+           break
+       else:
+           if color == 0:
+               s_code += str(chess[x][j])
+               color = chess[x][j]
+           else:
+               if color == chess[x][j]:
+                   s_code += str(chess[x][j])
+               else:
+                   s_code += str(chess[x][j])
+                   break
+   value = dic.get(s_code)
+   return value
+
+# 竖直方向搜索
+def vertical_search(rg, i):
+   s_code = ""
+   color = 0
+   for y in rg:
+       if chess[i][y] == 0:
+           break
+       else:
+           if color == 0:
+               s_code += str(chess[i][y])
+               color = chess[i][y]
+           else:
+               if color == chess[i][y]:
+                   s_code += str(chess[i][y])
+               else:
+                   s_code += str(chess[i][y])
+                   break
+   value = dic.get(s_code)
+   return value
+
+# 斜向搜索
+def slant_search(rg):
+   s_code = ""
+   color = 0
+   for x, y in rg:
+       if chess[x][y] == 0:
+           break
+       else:
+           if color == 0:
+               s_code += str(chess[x][y])
+               color = chess[x][y]
+           else:
+               if color == chess[x][y]:
+                   s_code += str(chess[x][y])
+               else:
+                   s_code += str(chess[x][y])
+                   break
+   value = dic.get(s_code)
+   return value
+最后在主体区中，首先初始化：def __init__(self):
+   tk = Tk()
+   tk.title("Pas_Gomoku")
+   tk.geometry(str(30*size + 30) + 'x' + str(30*size + 30))
+   self.canvas = Canvas(tk, width=500, height=500)
+   self.canvas.pack(expand=YES, fill=BOTH)
+
+   self.canvas.bind("<Button-1>", self.paint)
+
+   for num in range(1, 16):
+       self.canvas.create_line(num * 30, 30, num * 30, 450, width=2)
+   for num in range(1, 16):
+       self.canvas.create_line(30, num * 30, 450, num * 30, width=2)
+
+   tk.mainloop()
+用于判断在每一次落子之后是否达成胜利条件：@staticmethod
+def gameover(cur_x, cur_y):
+    count = 0
+    for i in range(cur_x+1, size+1):
+        if chess[i][cur_y] == chess[cur_x][cur_y]:
+            count += 1
+        else:
+            break
+    for i in range(cur_x, 0, -1):
+        if chess[i][cur_y] == chess[cur_x][cur_y]:
+                count += 1
+        else:
+            break
+    if count == 5:
+        tkinter.messagebox.showinfo("", "Game over")
+
+    count = 0
+    for i in range(cur_y+1, size+1):
+        if chess[cur_x][i] == chess[cur_x][cur_y]:
+            count += 1
+        else:
+            break
+    for i in range(cur_y, 0, -1):
+        if chess[cur_x][i] == chess[cur_x][cur_y]:
+            count += 1
+        else:
+            break
+    if count == 5:
+        tkinter.messagebox.showinfo("", "Game over")
+
+    count = 0
+    for i, j in zip(range(cur_x+1, size+1), range(cur_y+1, size+1)):
+        if chess[i][j] == chess[cur_x][cur_y]:
+            count += 1
+        else:
+            break
+    for i, j in zip(range(cur_x, 0, -1), range(cur_y, 0, -1)):
+        if chess[i][j] == chess[cur_x][cur_y]:
+            count += 1
+        else:
+            break
+    if count == 5:
+        tkinter.messagebox.showinfo("", "Game over")
+
+    count = 0
+    for i, j in zip(range(cur_x-1, 0, -1), range(cur_y+1, size+1)):
+        if chess[i][j] == chess[cur_x][cur_y]:
+            count += 1
+        else:
+            break
+    for i, j in zip(range(cur_x, size+1), range(cur_y, 0, -1)):
+        if chess[i][j] == chess[cur_x][cur_y]:
+            count += 1
+        else:
+            break
+    if count == 5:
+        tkinter.messagebox.showinfo("", "Game over")
+根据既定策略落子：def ai(self):
+    global best_x, best_y
+    global code
+    global neighbor_color
+
+    for i in range(1, size+1):
+        for j in range(1, size+1):
+            if chess[i][j] == 0:
+                value = horizontal_search(range(i + 1, size + 1), j)
+                if value:
+                    chess_Value[i][j] += value
+
+                value = horizontal_search(range(i - 1, 0, -1), j)
+                if value:
+                    chess_Value[i][j] += value
+
+                value = vertical_search(range(j - 1, 0, -1), i)
+                if value:
+                    chess_Value[i][j] += value
+
+                value = vertical_search(range(j + 1, size + 1), i)
+                if value:
+                    chess_Value[i][j] += value
+
+                value = slant_search(zip(range(i - 1, 0, -1), range(j + 1, size + 1)))
+                if value:
+                    chess_Value[i][j] += value
+
+                value = slant_search(zip(range(i + 1, size + 1), range(j - 1, 0, -1)))
+                if value:
+                    chess_Value[i][j] += value
+
+                value = slant_search(zip(range(i - 1, 0, -1), range(j - 1, 0, -1)))
+                if value:
+                    chess_Value[i][j] += value
+
+                value = slant_search(zip(range(i + 1, size + 1), range(j + 1, size + 1)))
+                if value:
+                    chess_Value[i][j] += value
+
+    value_max = 0
+    for v_row in range(1, size+1):
+        for v_col in range(1, size+1):
+            if chess_Value[v_row][v_col] > value_max and chess[v_row][v_col] == 0:
+                value_max = chess_Value[v_row][v_col]
+                best_x = v_row
+                best_y = v_col
+    chess[best_x][best_y] = 2
+    self.canvas.create_oval(best_x*30 - 15, best_y*30 - 15,
+                            best_x*30 + 15, best_y*30 + 15,
+                            fill="white")
+    CanvasDemo.gameover(best_x, best_y)
+作者：陈泽光
+链接：https://www.zhihu.com/question/20799742/answer/273960014
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+最后更新界面：def paint(self, event):
+    global cur_num
+
+    if event.x % 30 > 15:
+        event.x = event.x // 30 + 1
+    else:
+        event.x = event.x // 30
+    if event.y % 30 > 15:
+        event.y = event.y // 30 + 1
+    else:
+        event.y = event.y // 30
+    if event.x > size:
+        event.x = size
+    if event.y > size:
+        event.y = size
+    if event.x < 1:
+        event.x = 1
+    if event.y < 1:
+        event.y = 1
+
+    x1, y1 = (event.x * 30 - 15), (event.y * 30 - 15)
+    x2, y2 = (event.x * 30 + 15), (event.y * 30 + 15)
+    if chess[event.x][event.y] == 0:
+        self.canvas.create_oval(x1, y1, x2, y2, fill="black")
+        chess[event.x][event.y] = 1
+        cur_num += 1
+        CanvasDemo.gameover(event.x, event.y)
+        CanvasDemo.ai(self)
+    cur_num += 1
+当然这样的策略也存在缺陷，比如：两个相同的棋型出现在棋盘的不同位置，它们的价值显然是不同的，对此我们将做出一些调整。另外还有一些提高效率的方法。一看就懂的 Alpha-Beta 剪枝算法详解...（重点）经调查发现五子棋游戏只能加积分不能挣欢乐豆，所以建议转职为五子棋少年，每天将两块钱花在加倍积分道具上。
+
+作者：陈泽光
+链接：https://www.zhihu.com/question/20799742/answer/273960014
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
