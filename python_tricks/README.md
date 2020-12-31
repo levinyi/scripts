@@ -266,4 +266,59 @@ In the above example, we’re sorting a list of tuples by the second value in ea
 
 Both examples I showed you have more concise implementations in Python using the built-in operator.itemgetter() and abs() functions. But I hope you can see how using a lambda gives you much more flexibility. Want to sort a sequence by some arbitrary computed key? No problem. Now you know how to do it.
 
-###################################### 20201214 Levin
+Here's another interesting thing about  lambdas: Just like regular nested functions, lambdas also work as lexical closures.
+
+What's a lexical closure? It's just a fancy name for a function that remembers the values from the enclosing lexical scope even when the program flow is no longer in that scope. Here's a (fairly academic) example to illustrate the idea:
+```
+>>> def make_adder(n):
+...     return lambda x: x + n
+...
+>>> plus_3 = make_adder(3)
+>>> plus_3
+<function make_adder.<locals>.<lambda> at 0x7f1f9042b820>
+>>> plus_5 = make_adder(5)
+>>> plus_3(4)
+7
+>>> plus_5(4)
+9
+```
+In the above example, the x + n lambda can still access the value of n even though it was defined in the make_adder function (the enclosing scope).
+
+Sometimes, using a lambda function instead of a nested function declared with the def keyword can express the programmer's intent more clearly. But to be honest, this isn't a common occurrence -- at least not in the kind of code that I like to write. So let's talk a little more about that.
+
+### But Maybe You Shouldn't...
+
+On the one hand, I'm hoping this chapter got interested in exploring Python's lambda functions. On the other hand, I feel like it's time to put up another caveat: Lambda functions should be used sparingly and with extraordinary care.
+
+I know I've written my fair share of code using lambdas that looked "cool" but were actually a liability for me and my coworkers. if you're tempted to use a lambda, spend a few seconds (or minutes) to think if it is really the cleanest and most maintainable way to achieve the desired result.
+
+For example, doing something like this to save two lines of code is just silly. Sure, technically it works and it's a nice enough "trick". But it's also going to confuse the next gal or guy that has to ship a bugfix under a tight deadline:
+```
+# Harmful:
+>>> class Car:
+...     rev = lambda self: print("Wroom!")
+...     crash = lambda self: print('Boom!')
+...
+>>> my_car = Car()
+>>> my_car.crash()
+Boom!
+```
+I have similar feelings about complicated map() or filter() constructs using lambdas. Usually it's much cleaner to go with a list comprehension or generator expression:
+```
+# Harmful:
+>>> list(filter(lambda x:x %2 == 0, range(16)))
+[0, 2, 4, 6, 8, 10, 12, 14]
+
+# Better:
+>>> [x for x in range(16) if x % 2 ==0]
+[0, 2, 4, 6, 8, 10, 12, 14]
+```
+
+If you find yourself doing anything remotely complex with lambda expressions, consider defining a standalone function with a proper name instead.
+
+Saving a few keystrokes won't matter in the long run, but your colleagues (and your future self) will appreaciate clean and readable code more than terse wizardry.
+
+### Key Takeaway
+*  Lambda functions are single-expression functions that are not necessarily bound to a name (anonymous).
+*  Lambda functions can't use regular Python statements and always include an implicit return statement.
+*  Always ask yourself: Would using a regular (named) function or a list comprehension offer more clarity?
