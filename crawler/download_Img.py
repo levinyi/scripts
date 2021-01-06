@@ -1,7 +1,6 @@
 import os,sys
 import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
 
 def deal_html(url):
     try:
@@ -62,10 +61,11 @@ def getImg(html, index, path):
         save_Img(url_link, dirs['detail_img_dir'])
 
 def main():
-    url = "https://bestexltd.en.alibaba.com/productgrouplist-807760173/Leggings_Pants.html?spm=a2700.shop_pl.98.1"
+    #url = "https://bestexltd.en.alibaba.com/productgrouplist-807760173/Leggings_Pants.html?spm=a2700.shop_pl.98.1"
+    url = input("input your html url here: ")
     html_list = getHTML(url)
     all_products = list(set(html_list))
-    outdir = sys.argv[1]
+    outdir = input("all picture will download under this name : please input a new folder name:")
     for index, product_html in enumerate(all_products, start=1):
         index = str(index).zfill(3)
         print("{}: {}".format(index, product_html))
