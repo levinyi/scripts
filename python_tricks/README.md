@@ -322,3 +322,82 @@ Saving a few keystrokes won't matter in the long run, but your colleagues (and y
 *  Lambda functions are single-expression functions that are not necessarily bound to a name (anonymous).
 *  Lambda functions can't use regular Python statements and always include an implicit return statement.
 *  Always ask yourself: Would using a regular (named) function or a list comprehension offer more clarity?
+
+
+# 3.3 The Power of Decorators
+At their core, Python's decorators allow you to extend and modify the behavior of a callable(functions, methods, and classes) without permanently modifying the callable itself.
+
+Any sufficiently generic functionality you can tack on to an existing class or function's behavior makes a great use case for decoration. This includes the following:
+* logging
+* enforcing access control and authentication
+* instrumentation and timing functions
+* rate-limiting
+* caching and mor
+
+Now, why should you master the use of decorators in Python? After  all, what I just mentioned  sounded quite abstract, and it might be difficult to see how decorators can benefit you in your day-to-day work as a Python developer. Let my try to bring some clarity to this question by giving you a somewhat real-world example:
+
+Imagine you've got 30 functions with business logic in your reportgeneration program. One rainy Monday morning your boss walks up to your desk and says: "Happy Monday! Remember those TPS reports? I need you to add input/output logging to each step in the report generator. XYZ Corp needs it for auditing purposes. Oh, and I told them we can ship this by Wednesday."
+
+Depending on whether or not you've got a solid grasp on Python's decorators, this request will either send your blood pressure spiking or leave you relatively calm.
+
+Without decorators you might be spending the next three days scrambling to modify each of those 30 functions and clutter them up with manual logging calls. Fun times, right?
+
+If you do know your decorators however, you'll calmly smile at your boss and say: "Don't worry Jim, I'll get it done by 2pm today."
+
+Right after that you'll type the code for a generic @audit_log decorator (that's only about 10 lines long) and quickly paste it in front of each function definition. Then you'll commit your code and grab another cup of coffee...
+
+I'm dramatizing here, but only a little. Decorators can be that powerful. I'd go as far as to say that understanding decorators is a milestone for any serious Python programmer. They require a solid grasp of several advanced concepts in the language, including the properties of first-class functions.
+
+### I believe that the payoff for understanding how decorators work in Python can be enormous.
+
+Sure, decorators are relatively complicated to wrap your head around for the first time, but they're a hightly useful feature that you'll often encounter in third-party frameworks and the Python standard library. Explaining decorators is also a make or break moment for any good Python tutorial. I'll do my best here to introduce you to them step by step.
+
+Before you dive in however, now would be an excellent moment to refresh your memory on the properties of first-class functions in Python. There's a chapter on them in this book, and I would encourage you to take a few minutes to review it. The most important "first-class functions" takeaways for understanding decorators are:
+* Functions are objects- they can be assigned to variables and passed to and returned from other functions
+* Functions can be defined inside other functions -- and a child function can capture the parent function's local state (lexical closures)
+
+Alright, are you ready to do this? Let's get started.
+
+### Python Decorator Basics
+Now, what are decorators really? They "decorate" or "wrap" another function and let you execute code before and after the wrapped function runs.
+
+Decorators allow you to define reusable building blocks that can change or extend the behavior of other functions. And, they let you do that without permanently modifying the wrapped function itself. The function's behavior changes only when it's decorated.
+
+What might the implementation of a simple decorator look like? In basic terms, a decorator is a callable that takes a callable as input and returns another callable.
+
+The following function has that property and could be considered the simplest decorator you could possibly write:
+```
+def null_decorator(func):
+    return func
+```
+
+As you can see, null_decorator is a callable (it's a function), it takes another callable as its input, and it returns the same input callable without modifying it.
+
+Let's use it to decorate (or wrap) another function:
+```
+def greet():
+    return "Hello"
+
+greet = null_decorator(greet)
+
+>>> greet()
+'Hello'
+```
+
+In this example, I've defined a greet function and then immediately decorated it by running it through the null_decorator function. I know this doesn't look very useful yet. I mean, we specifically designed the null decorator to be useless, right? But in a moment this example will clarify how Python's special-case decorator syntax works.
+
+Instead of explicitly calling null_decorator on greet and then reassigning the greet variable, you can use Python's @syntax for decorating a function more conveniently:
+```
+@null_decorator
+def greet():
+    return "Hello"
+
+>>> greet()
+'Hello'
+```
+
+Putting an @null_decorator line in front of the function definition is the same as defining the function first and then running through the decorator. Using the @syntax is just syntactic sugar and a shortcut for this commonly used pattern.
+
+Note that using the @ syntax decorates the function immediately at definition time. This makes it difficult to access the undecorated original without brittle hacks. Therefore you might choose to decorate some functions manually in order to retain the ability to call the undecorated function as well.
+
+20210111
