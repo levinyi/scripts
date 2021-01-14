@@ -400,4 +400,44 @@ Putting an @null_decorator line in front of the function definition is the same 
 
 Note that using the @ syntax decorates the function immediately at definition time. This makes it difficult to access the undecorated original without brittle hacks. Therefore you might choose to decorate some functions manually in order to retain the ability to call the undecorated function as well.
 
-20210111
+### Decorators Can Modify Behavior
+Now that you're a little more familiar with the decorator syntax, let's write another decorator that actually does something and modifies the behavior of the decorated function.
+
+Here's a slightly more complex decorator which converts the result of the decorated function to uppercase letters:
+```
+def uppercase(func):
+    def wrapper():
+        original_result = func()
+        modified_result = original_result.upper()
+        return modified_result
+    return wrapper
+```
+
+Instead of simply returning the input function like the null decorator did, this uppercase decorator defines a new function on the fly(a closure) and uses it to wrap the input function in order to modify its behavior at call time.
+
+The wrapper closure has access to the undecorated input function and it is free to execute additional code before and after calling the input function. (Technically, it doesn't even need to call the input function at all.)
+
+Note how, up until now, the decorated function has never been executed. Actually calling the input function at this point wouldn't make any sense -- you'll want the decorator to be able to modify the behavior of its input function when it eventually gets called.
+
+You might want to let that sink in for a minute or two. I know how complicated this stuff can seem, but we'll get it sorted out together, I promise.
+
+Time to see the uppercase decorator in action. What happens if you decorate the original greet function with it?
+```
+@uppercase
+def greet():
+    return 'Hello!'
+
+>>>greet()
+'HELLO!'
+```
+I hope this was the result you expected. Let's take a closer look at what just happened here. Unlike null_decorator, our uppercase decorator returns a different function object when it decorates a function:
+```
+>>> greet
+<function uppercase.<locals>.wrapper at 0x7f76a753d4c0>
+>>> null_decorator(greet)
+<function uppercase.<locals>.wrapper at 0x7f76a753d4c0>
+>>> uppercase(greet)
+<function uppercase.<locals>.wrapper at 0x7f76a753d5e0>
+```
+
+
