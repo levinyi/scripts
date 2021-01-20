@@ -440,4 +440,99 @@ I hope this was the result you expected. Let's take a closer look at what just h
 <function uppercase.<locals>.wrapper at 0x7f76a753d5e0>
 ```
 
+And as you saw earlier, it needs to do that in order to modify the behavior of the decorated function when it finally gets called. The uppercase decorator is a function itself. And the only way to influence the "future behavior" of an input function it decorates is to replace (or wrap) the input function with a closure.
+
+That's why uppercase defines and returns another function (the closure) that can then be called at a later time, run the original input function, and modify its result.
+
+Decorators modify the behavior of a callable through a wrapper closure so you don't have to permanently modify the original. The original callable isn't permanently modified -- its behavior changes only when decorated.
+
+This let's you tack on reusable building blocks, like logging and other instrumenttation, to existing functions and classes. It makes decorators such a powerful feature in Python that it's frequently used in the standard library and in third-party packages.
+
+### A Quick Intermission
+By the way, if you feel like you need a quick coffee break or a walk around the block at this point -- that's totally normal. In my opinion closures and decorators are some of the most difficult concepts to understand in Python.
+
+Please, take your time and don't worry about figuring this out immediately. Playing through the code examples in an interpreter session one by one often helps make things sink in.
+
+I know you can do it!
+
+### Applying Multiple Decorators to a Function
+Perhaps not surprisingly, you can apply more than one decorator to a function. This accumulates their effects and it's what makes decorators so helpful as resuable building blocks.
+
+Here's an example. The following two decorators wrap the output string of the decorated function in HTML tags. By looking at how the tags are nested, you can see which order Python uses to apply multiple decorators:
+```
+def strong(func):
+    def wrapper():
+        return '<strong>' + func() + '</strong>'
+    return wrapper
+
+def emphasis(func):
+    def wrapper():
+        return '<em>' + func() + '</em>'
+    return wrapper
+```
+Now let's take these two decorators and apply them to our greet function at the same time. You can use the regular @ syntax for that and just "stack" multiple decorators on top of a single function:
+```
+>>> greet()
+'<em><strong>Hello!</strong></strong>'
+```
+
+This clearly shows in what order the decorators were applied: from bottom to top. First, the input function was wrapped by the @emphasis decorator, and then the resulting (decorated) function got wrapped again by the @strong decorator.
+
+To help me remember this bottom to top order, I like to call this behavior decorator stacking. You start building the stack at the bottom and then keep adding new blocks on top to work your way upwards.
+
+If you break down the above example and avoid the @ syntax to apply the decorators, the chain of decorator function calls looks like this:
+```
+decorated_greet = strong(emphasis(greet))
+```
+
+Again you can see that the emphasis decorator is applied first and then the resulting wrapped function is wrapped again by the strong decorator.
+
+This also means that deep levels of decorator stacking will evenutally have an effect on performance because they keep adding nested function calls. In practice, this usually won't be a problem, but it's something to keep in mind if you're working on performance-intensive code that frequently uses decoration.
+
+### Decorating Functions That Accept Arguments
+All examples so far only decorated a simple nullary greet function that didn't take any arguments whatsoever. Up until now, the decorators you saw here didn't have to deal with forwarding arguments to the input function.
+
+If you try to apply one of these decorators to a function that takes argumetns, it will not work correctly. How do you decorate a function that takes arbitrary arguments?
+```
+def proxy(func):
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper
+```
+There are two notable things going on with this decorator:
+**  It uses the * and ** operators in the wrapper closure definition to collect all positional and keyword arguments and stores them in variables (args and kwargs).
+*** The  wrapper closure then forwards the collected arguments to the original input function using the * and ** "argument unpacking" operators.
+It's a bit unfortunate that the meaning of the star and double-star operators is overloaded and changes depending on the context they're used in, but I hope you get the idea.
+
+Let's expand the technique laid out by the proxy decorator into a more useful practical example. Here's a trace decorator that logs function arguments and results during execution time:
+```
+def trace(func):
+    def wrapper(*args, **kwargs):
+        print(f'TRACE: CALLING {func.__name__}() '
+            f'with {args}, {kwargs}')
+        original_result = func(*args, **kwargs)
+
+        print(f'TRACE: {func.__name__}() '
+            f'returned {original_result!r}')
+        return original_result
+    return wrapper
+```
+Decorating a function with trace and then calling it will print the arguments passed to the decorated function and its return value. This is still somewhat of a "toy" example -- but in a pinch it makes a great debugging aid:
+```
+@trace
+def say(name, line):
+    return f'{name}: {line}'
+>>> say('Jane', 'Hello, World')
+TRACE: CALLING say() with ('Jane', 'Hello, World'), {}
+TRACE: say() returned 'Jane: Hello, World'
+'Jane: Hello, World'
+```
+Speaking of debugging, there are some things you should keep in mind when debugging decorators:
+### How to Write "Debuggable" Decorators
+When you use a decorator, really what you're doing is replacing one function with another. One downside of this process is that it "hides" some of the metadata attached to the original (undecorated) function.
+
+For example, the original function name, its docstring, and parameter list are hidden by the wrapper closure:
+```
+
+```
 
