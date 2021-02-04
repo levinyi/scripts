@@ -533,6 +533,54 @@ When you use a decorator, really what you're doing is replacing one function wit
 
 For example, the original function name, its docstring, and parameter list are hidden by the wrapper closure:
 ```
+def greet():
+    """Return a friendly greeting."""
+    return 'Hello!'
 
+decorated_greet = uppercase(greet)
 ```
+If you try to access any of that function metadata, you’ll see the wrapper closure’s metadata instead:
+```
+>>> greet.__name__
+'greet'
+>>> greet.__doc__
+'Return a friendly greeting.'
+>>> decorated_greet.__name__
+'wrapper'
+>>> decorated_greet.__doc__
+None
+```
+This makes debugging and working with the Python interpreter awkward and challenging. Thankfully there’s a quick fix for this: the functools.wraps decorator included in Python’s standard library. You can use functools.wraps in your own decorators to copy over the lost metadata from the undecorated function to the decorator closure.
+Here’s an example:
+```
+import functools
+def uppercase(func):
+    @functools.wraps(func)
+    def wrapper():
+        return func().upper()
+    return wrapper
+```
+Applying functools.wraps to the wrapper closure returned by the decorator carries over the docstring and other metadata of the input function:
+```
+@uppercase
+def greet():
+"""Return a friendly greeting."""
+return 'Hello!'
+>>> greet.__name__
+'greet'
+>>> greet.__doc__
+'Return a friendly greeting.'
+```
+As a best practice, I’d recommend that you use functools.wraps in all of the decorators you write yourself. It doesn’t take much time and
+it will save you (and others) debugging headaches down the road. Oh, and congratulations—you’ve made it all the way to the end of
+this complicated chapter and learned a whole lot about decorators in Python. Great job!
+
+Key Takeaways
+• Decorators define reusable building blocks you can apply to a callable to modify its behavior without permanently modifying
+the callable itself.
+• The @ syntax is just a shorthand for calling the decorator on an input function. Multiple decorators on a single function are
+applied bottom to top (decorator stacking).
+• As a debugging best practice, use the functools.wraps helper in your own decorators to carry over metadata from the undecorated callable to the decorated one.
+• Just like any other tool in the software development toolbox, decorators are not a cure-all and they should not be overused. It’s important to balance the need to “get stuff done” with the goal of “not getting tangled up in a horrible, unmaintainable mess of a code base.”
+
 
