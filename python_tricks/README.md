@@ -583,4 +583,37 @@ applied bottom to top (decorator stacking).
 • As a debugging best practice, use the functools.wraps helper in your own decorators to carry over metadata from the undecorated callable to the decorated one.
 • Just like any other tool in the software development toolbox, decorators are not a cure-all and they should not be overused. It’s important to balance the need to “get stuff done” with the goal of “not getting tangled up in a horrible, unmaintainable mess of a code base.”
 
+#3.4 Fun With *args and **kwargs
+I once pair-programmed with a smart Pythonista who would exclaim “argh!” and “kwargh!” every time he typed out a function definition with optional or keyword parameters. We got along great otherwise. I guess that’s what programming in academia does to people eventually.
+Now, while easily mocked, *args and **kwargs parameters are nevertheless a highly useful feature in Python. And understanding their potency will make you a more effective developer. So what are *args and **kwargs parameters used for? They allow a function to accept optional arguments, so you can create flexible APIs in your modules and classes:
+```
+def foo(required, *args, **kwargs):
+    print(required)
+    if args:
+        print(args)
+    if kwargs:
+        print(kwargs)
+```
+The above function requires at least one argument called “required,” but it can accept extra positional and keyword arguments as well. If we call the function with additional arguments, args will collect extra positional arguments as a tuple because the parameter name has a * prefix.
+
+Likewise, kwargs will collect extra keyword arguments as a dictionary because the parameter name has a ** prefix. Both args and kwargs can be empty if no extra arguments are passed to the function.
+As we call the function with various combinations of arguments, you’ll see how Python collects them inside the args and kwargs parameters according to whether they're positional or keyword arguments:
+```
+>>> foo()
+TypeError:
+"foo() missing 1 required positional arg: 'required'"
+>>> foo('hello')
+hello
+>>> foo('hello', 1, 2, 3)
+hello
+(1, 2, 3)
+>>> foo('hello', 1, 2, 3, key1='value', key2=999)
+hello
+(1, 2, 3)
+{'key1': 'value', 'key2': 999}
+```
+I want to make it clear that calling the parameters args and kwargs is simply a naming convention. The previous example would work just as well if you called them *parms and **argv. The actual syntax is just the asterisk (*) or double asterisk (**), respectively. 
+
+However, I recommend that you stick with the accepted naming convention to avoid confusion. (And to get a chance to yell “argh!” and “kwargh!” every once in a while.)
+
 
