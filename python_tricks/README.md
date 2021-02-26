@@ -616,4 +616,15 @@ I want to make it clear that calling the parameters args and kwargs is simply a 
 
 However, I recommend that you stick with the accepted naming convention to avoid confusion. (And to get a chance to yell “argh!” and “kwargh!” every once in a while.)
 
+### Forwarding Optional or Keyword Arguments
+It’s possible to pass optional or keyword parameters from one function to another. You can do so by using the argument-unpacking operators * and ** when calling the function you want to forward arguments to.
+
+This also gives you an opportunity to modify the arguments before you pass them along. Here’s an example:
+```
+def foo(x, *args, **kwargs):
+	kwargs['name'] = 'Alice'
+	new_args = args + ('extra', )
+	bar(x, *new_args, **kwargs)
+```
+This technique can be useful for subclassing and writing wrapper functions. For example, you can use it to extend the behavior of a parent class without having to replicate the full signature of its constructor in the child class. This can be quite convenient if you’re working with an API that might change outside of your control:
 
