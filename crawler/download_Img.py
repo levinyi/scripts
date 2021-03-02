@@ -62,6 +62,7 @@ def getImg(html, index, path):
 
 def main():
     #url = "https://bestexltd.en.alibaba.com/productgrouplist-807760173/Leggings_Pants.html?spm=a2700.shop_pl.98.1"
+    #https://diqian.1688.com/page/offerlist.htm?spm=a2615.2177701.autotrace-topNav.3.68b41735oBtMa4
     url = input("input your html url here: ")
     html_list = getHTML(url)
     all_products = list(set(html_list))
