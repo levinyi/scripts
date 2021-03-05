@@ -627,4 +627,21 @@ def foo(x, *args, **kwargs):
 	bar(x, *new_args, **kwargs)
 ```
 This technique can be useful for subclassing and writing wrapper functions. For example, you can use it to extend the behavior of a parent class without having to replicate the full signature of its constructor in the child class. This can be quite convenient if you’re working with an API that might change outside of your control:
+```
+class Car:
+    def __init__(self, color, mileage):
+        self.color = color
+        self.mileage = mileage
+
+class AlwaysBlueCar(Car):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.color = 'blue'
+
+>>> AlwaysBlueCar('green', 48392).color
+'blue'
+```
+The AlwaysBlueCar constructor simply passes on all arguments to its parent class and then overrides an internal attribute. This means if the parent class constructor changes, there’s a good chance that AlwaysBlueCar would still function as intended.
+
+The downside here is that the AlwaysBlueCar constructor now has a rather unhelpful signature—we don’t know what arguments it expects without looking up the parent class.
 
