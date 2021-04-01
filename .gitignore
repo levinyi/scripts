@@ -4,3 +4,4 @@ R_stuff
 python_packages
 test/*
 test*
+jinja2
