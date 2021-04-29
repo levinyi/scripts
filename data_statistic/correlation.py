@@ -23,11 +23,15 @@ def _argparse():
     parser.add_argument('-b', '--fileb', action='store', dest='file2', help="this is list file")
     parser.add_argument('-kb', '--key_b', action='store', dest='key_b', default=1, help="this is the key of file")
     parser.add_argument('-vb', '--value_b', action='store', dest='value_b', default=2, help="this is the colum number of file B's value. and use [all] to show all line.")
-    parser.add_argument('-sb', '--separatorb', action='store', dest='separatorb', default='tab', help='separator of first file. choose: [tab] or [space], default [ tab ].')
+    parser.add_argument('-sb', '--separatorb', action='store', dest='separatorb', default='tab', help='separator of first file. choose: [tab,space,comma] default [ tab ].')
     
     parser.add_argument('-u', '--union', action='store_true', dest='union', default=False, help='show union list')
     parser.add_argument('-f', '--freq',  action='store_true', dest='freq', default= False, help='calculate frequency of total value for each value in each file. Not ratio of two values.')
-
+    
+    parser.add_argument('-ra', '--rename_headera',  action='store', dest='rename_headera', help='you can rename output file header.')
+    parser.add_argument('-rb', '--rename_headerb',  action='store', dest='rename_headerb', help='you can rename output file header.')
+    
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.1')
     return parser.parse_args()
 
 
@@ -77,10 +81,11 @@ def dict_freqency(adict):
 
 def main():
     parser = _argparse()
+    '''
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
         sys.exit(1)
-
+    '''
     file1_name = os.path.basename(parser.file1).split(".")[0]
     file2_name = os.path.basename(parser.file2).split(".")[0]
 
@@ -90,8 +95,16 @@ def main():
     if parser.freq:
         file1_dict = dict_freqency(file1_dict)  # recover the fomer dict.
         file2_dict = dict_freqency(file2_dict)  # recover the fomer dict.
-
-    print("names\t%s\t%s" % (file1_name, file2_name))
+    
+    if parser.rename_headera:
+        rename_headera = parser.rename_headera
+    else:
+        rename_headera = file1_name
+    if parser.rename_headerb:
+        rename_headerb = parser.rename_headerb
+    else:
+        rename_headerb = file2_name
+    print("names\t%s\t%s" % (rename_headera, rename_headerb))
 
     if parser.union:
         union_set = list(set(file1_list).union(set(file2_list)))
