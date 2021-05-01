@@ -1,0 +1,6 @@
+gender	type	number
+F	Jackets	JK207  
+F	Hoodie	WH205  
+F	Sweatshirts	SWT201
+F	pans	SDF0034
+M	Jackets	JK399
