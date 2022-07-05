@@ -28,6 +28,7 @@ def find_dup_file(file_list):
             f_name = os.path.basename(each_file).split("_")[0]
 
         # R220325P01-G0474E1L1-1_L3_1.fq.gz
+        # R220620P02-G0484E8L1_L2_2.fq.gz # bug
         read = each_basename.split(".")[0].split("_")[-1]
         # print(f_name)
 
