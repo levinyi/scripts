@@ -43,7 +43,7 @@ def find_dup_file(file_list):
 
 fastq_dict, flag = find_dup_file(all_fastq_list)
 import json
-# print(json.dumps(fastq_dict,indent=2))
+# print(json.dumps(fastq_dict,indent=2)) # for debug
 '''
 {
   "G470E6L1": {
@@ -68,21 +68,21 @@ with open("merge.sh","w") as f:
         for R in fastq_dict[each_sample]:
             fq_list = fastq_dict[each_sample][R]
             if len(fq_list) >1:
-                linked_sample +=1
+                merged_sample +=1
                 if flag:
                     f.write("cat {} >{}_S1_L001_R{}_001.fastq.gz\n".format(" ".join(fq_list), each_sample, R))
                 else:
                     f.write("cat {} >{}_L1_{}.fq.gz\n".format(" ".join(fq_list), each_sample, R))
             else:
-                merged_sample +=1
+                linked_sample +=1
                 if flag:
                     f.write("ln -s {} {}_S1_L001_R{}_001.fastq.gz\n".format(" ".join(fq_list), each_sample, R))
                 else:
                     f.write("ln -s {} {}_L1_{}.fq.gz\n".format(" ".join(fq_list), each_sample, R))
 sample_number =len(fastq_dict.keys())
 fq_number = len(fastq_dict.values())
-print("detected Total :{} samples and {} files.".format(sample_number,len(all_fastq_list)))
-print("Need merge {} samples with {} files.".format(merged_sample,merged_sample*2))
+print("Detected total :{} samples with {} unique fastqs. But find total {} fastqs.".format(sample_number, merged_sample, len(all_fastq_list)))
+print("So, {} fastq files are duplicated out of {} files.".format(merged_sample, merged_sample*2))
 print("linked sample:{}".format(linked_sample))
-print("Total sample : {} and total files: {} after merge.".format(merged_sample+linked_sample,(merged_sample+linked_sample)*2))
+print("Total sample : {} unique fastq files. ".format(merged_sample+linked_sample))
 print("please run : `sh merge.sh` to merge data")
