@@ -120,7 +120,15 @@ def main():
         name1 = os.path.basename(parser.file1).split(".")[0]
         name2 = os.path.basename(parser.file2).split(".")[0]
         subsets = (len(left_diff), len(right_diff), len(intersection))
-        venn2(subsets, set_labels=(name1, name2))
+        pic = venn2(subsets, set_labels=(name1, name2), set_colors=('r','g'),alpha=0.4)
+        #pic.get_patch_by_id('10').set_edgecolor('#FF0000') #左圆形边框颜色
+        #pic.get_patch_by_id('10').set_linestyle('-.') #左圆形边框样式
+        #pic.get_patch_by_id('10').set_linewidth(2) #左圆形边框大小
+        #pic.get_patch_by_id('01').set_linestyle(':') #右圆形边框样式
+        #pic.get_patch_by_id('11').set_edgecolor('#0F60A9') #中间边框颜色
+        #pic.get_patch_by_id('11').set_linewidth(3) #中间边框大小 
+        # https://dyfocus.com/zh-cn/news-philosophy/1d0511.html
+
         if parser.graph_name:
             plt.savefig(parser.graph_name)
         else:
