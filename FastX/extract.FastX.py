@@ -48,7 +48,7 @@ else:
     header = open(sys.argv[1], "r")
 
 # input is fasta format.
-if sys.argv[1].replace(".gz", "").endswith(("fa","fasta","fna")):
+if sys.argv[1].replace(".gz", "").endswith(("fa","fasta","fna","txt")):
     # extract specific region sequence.
     if len(sys.argv) == 5:
         flag = 'Ture'
