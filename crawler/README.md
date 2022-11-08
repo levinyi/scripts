@@ -23,4 +23,10 @@ for example:
 python test_amazon.py
 ```
 
+# download top 250 movies picture from douban
+using requests.
+```
+  python3 doubanTop250.py
+```
+
 not completed.
