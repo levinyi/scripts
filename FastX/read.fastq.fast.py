@@ -1,4 +1,4 @@
-""" sadfas asddf asdf """
+"""  """
 import sys
 import datetime
 import gzip
@@ -10,7 +10,7 @@ def usage():
     docstring for usage
     
     Try me:
-        python test.fast.py /cygene/data/20190712_MG_G22_G23_G27_G28_G29_G30/G30E1L2_BKDL190819904-1a/G30E1L2_BKDL190819904-1a_1.fq.gz
+        python read.fastq.fast.py /cyg/data/20190712_MG_G22_G23_G27_G28_G29_G30/G30E1L2_BKDL190819904-1a/G30E1L2_BKDL190819904-1a_1.fq.gz
     """
     
 def print_current_time():
@@ -27,6 +27,7 @@ print "%s finished" % print_current_time()
 
 print "%s start" % print_current_time()
 HEADER = gzip.open(sys.argv[1], "r")
+
 try:
     NUM_LINES = sum([1 for each in SeqIO.parse(HEADER, "fastq")])
     print NUM_LINES
