@@ -1,7 +1,8 @@
 ''' these modules were used.'''
+import argparse
+import logging
 import os
 import sys
-import argparse
 from itertools import islice
 
 
@@ -11,6 +12,7 @@ def updates_info():
     20200509: add 'all' to value column of each file.
     20200508: updates: for added comma split.
     '''
+
 def _argparse():
     parser = argparse.ArgumentParser(description="More description see: https://www.jianshu.com/p/66c0448f44f3", prog="PROG")
     parser.add_argument('-a', '--filea', action='store', dest='file1', help="this is config file")
@@ -39,38 +41,24 @@ def deal_file(f, k, v, s, header):
     ''' deal file to get a dict for key and value. and get a list for all keys'''
     a_dict = {}
     a_list = []
+    start = 1 if header else 0
+    
     with open(f, "r") as f1:
-        if header:
-            for line in islice(f1, 1, None):
-                line = line.rstrip("\n")
-                if s == 'tab':
-                    c = line.split("\t")
-                elif s == 'comma':
-                    c = line.split(",")
-                else:
-                    c = line.split()
-
-                if v == 'all':
-                    a_dict[c[int(k) - 1]] = line
-                else:
-                    a_dict[c[int(k) - 1]] = c[int(v) - 1]
-
-                a_list.append(c[int(k) - 1])
-        else:
-            for line in f1:
-                line = line.rstrip("\n")
-                if s == 'tab':
-                    c = line.split("\t")
-                elif s == 'comma':
-                    c = line.split(",")
-                else:
-                    c = line.split()
-                if v == 'all':
-                    a_dict[c[int(k) - 1]] = line
-                else:
-                    a_dict[c[int(k) - 1]] = c[int(v) - 1]
-                a_list.append(c[int(k) - 1])
+        for line in islice(f1, start, None):
+            line = line.rstrip("\n")
+            if s == 'tab':
+                c = line.split("\t")
+            elif s == 'comma':
+                c = line.split(",")
+            else:
+                c = line.split()
+            if v == 'all':
+                a_dict[c[int(k) - 1]] = line
+            else:
+                a_dict[c[int(k) - 1]] = c[int(v) - 1]
+            a_list.append(c[int(k) - 1])
     return a_dict, a_list
+
 
 def dict_freqency(adict):
     total_sum = sum((int(k) for k in adict.values()))
@@ -79,7 +67,19 @@ def dict_freqency(adict):
         new_dict[each] = float(adict[each])/total_sum
     return new_dict
 
+def get_header_name(parser, file1_name, file2_name):
+    if parser.rename_headera:
+        rename_headera = parser.rename_headera
+    else:
+        rename_headera = file1_name
+    if parser.rename_headerb:
+        rename_headerb = parser.rename_headerb
+    else:
+        rename_headerb = file2_name
+    return rename_headera, rename_headerb
+
 def main():
+    logging.basicConfig(level=logging.DEBUG,format="%(asctime)s %(levelname)s %(message)s", datefmt = '%Y-%m-%d %H:%M:%S')
     parser = _argparse()
     '''
     if len(sys.argv) == 1:
@@ -93,29 +93,39 @@ def main():
     file2_dict, file2_list = deal_file(parser.file2, parser.key_b, parser.value_b, parser.separatorb, parser.headerb)
     
     if parser.freq:
-        file1_dict = dict_freqency(file1_dict)  # recover the fomer dict.
-        file2_dict = dict_freqency(file2_dict)  # recover the fomer dict.
+        logging.info("Convert column value to frequency (each_value/col_sum)")
+        file1_freq_dict = dict_freqency(file1_dict)  # recover the fomer dict.
+        file2_freq_dict = dict_freqency(file2_dict)  # recover the fomer dict.
     
-    if parser.rename_headera:
-        rename_headera = parser.rename_headera
-    else:
-        rename_headera = file1_name
-    if parser.rename_headerb:
-        rename_headerb = parser.rename_headerb
-    else:
-        rename_headerb = file2_name
-    print("names\t%s\t%s" % (rename_headera, rename_headerb))
+    output_headera, output_headerb = get_header_name(parser, file1_name, file2_name)
+    # print("names\t%s\t%s" % (rename_headera, rename_headerb))
+
+    union_set = list(set(file1_list).union(set(file2_list)))
+    intersection = list(set(file1_list).intersection(set(file2_list)))
 
     if parser.union:
-        union_set = list(set(file1_list).union(set(file2_list)))
-        for index, each in enumerate(union_set, 1):
-            # print("{0}\t{1}\t{2}".format(index, file1_dict.get(each, 0), file2_dict.get(each, 0)))
-            print("{0}\t{1}\t{2}".format(each, file1_dict.get(each, 0), file2_dict.get(each, 0)))
+        if parser.freq:
+            print("names\t{0}\t{0}_freq\t{1}\t{1}_freq".format(output_headera, output_headerb))
+            for index, each in enumerate(union_set, 1):
+                print("{}\t{}\t{}\t{}\t{}".format(each, file1_dict.get(each, 0), file1_freq_dict.get(each, 0), file2_dict.get(each, 0),file2_freq_dict.get(each, 0)))
+        else:
+            print("names\t{0}\t{1}" % (output_headera, output_headerb))
+            for index, each in enumerate(union_set, 1):
+                # print("{0}\t{1}\t{2}".format(index, file1_dict.get(each, 0), file2_dict.get(each, 0)))
+                print("{0}\t{1}\t{2}".format(each, file1_dict.get(each, 0), file2_dict.get(each, 0)))
     else:
-        intersection = list(set(file1_list).intersection(set(file2_list)))
-        for index, each in enumerate(intersection, 1):
-            # print("%s\t%s\t%s" % (index, file1_dict[each], file2_dict[each]))
-            print("%s\t%s\t%s" % (each, file1_dict[each], file2_dict[each]))
+        if parser.freq:
+            print("names\t{0}\t{0}_freq\t{1}\t{1}_freq".format(output_headera, output_headerb))
+            for index, each in enumerate(intersection, 1):
+                print("{}\t{}\t{}\t{}\t{}".format(each, file1_dict[each], file1_freq_dict[each], file2_dict[each], file2_freq_dict[each]))
+        else:
+            print("names\t{0}\t{1}" % (output_headera, output_headerb))
+            for index, each in enumerate(intersection, 1):
+                # print("%s\t%s\t%s" % (index, file1_dict[each], file2_dict[each]))
+                print("%s\t%s\t%s" % (each, file1_dict[each], file2_dict[each]))
+    
+    logging.info("union: {}".format(len(union_set)))
+    logging.info("intersection: {}".format(len(intersection)))
 
 
 if __name__ == '__main__':
