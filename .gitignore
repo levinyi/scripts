@@ -5,3 +5,4 @@ python_packages
 test/*
 test*
 jinja2
+data_merge/DataMerge.py
