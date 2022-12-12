@@ -82,14 +82,8 @@ sh smart_md5sum_check.sh # this script is a tricks of use md5sum in patch way.
 # raster2matrix
 ```
 this is the raster2matrix converting
-see : xxxxx
 ```
 
-# matrix2raster
-```
-this the script that converting matrix2raster
-see: xxxxx
-```
 
 # data merge
 merge two or more batch of sequening data automatically.
@@ -99,8 +93,12 @@ see: https://www.jianshu.com/p/9c4f398eb33d
 this folder contains some scripts that can convert data format from one type to another. for example:
 1. gene2ensembl
 2. matrix2raster
-3. featureCounts2TPM.py
-4. dna sequencing to complementory and reverse.
-5. nuclear tide to aminoacid.
+- convert matrix to raster format. see:
+3. raster2matrix
+- convert raster to matrix format. see:
+4. featureCounts2TPM.py
+- convert featuresCounts txt to TPM, calculate TPM. see:https://www.jianshu.com/p/
+5. dna sequencing to complementory and reverse.
+6. nuclear tide to aminoacid.
 
 
