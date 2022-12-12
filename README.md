@@ -71,6 +71,7 @@ python extract.FastX.py test.fa chr1
 ```
 more detail see: "https://www.jianshu.com/p/22051fc6e0a3"
 3. simulate_fasta2fastq.py
+simulate_fasta2fastq.py
 
 # md5sum check
 ```
@@ -89,3 +90,17 @@ see : xxxxx
 this the script that converting matrix2raster
 see: xxxxx
 ```
+
+# data merge
+merge two or more batch of sequening data automatically.
+see: https://www.jianshu.com/p/9c4f398eb33d
+
+# for Format converting.
+this folder contains some scripts that can convert data format from one type to another. for example:
+1. gene2ensembl
+2. matrix2raster
+3. featureCounts2TPM.py
+4. dna sequencing to complementory and reverse.
+5. nuclear tide to aminoacid.
+
+
