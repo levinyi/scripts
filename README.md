@@ -41,19 +41,6 @@ example:
 python compare.py -a compare.list_a.txt -al 1 -b compare.list_b.txt -bl 1
 ```
 
-# extract Fastq/Fasta information.
-```
-#support read id list file
-python extract.FastX.py test.fq test.list
-# support gzip file and specific read id
-python extract.FastX.py test.fastq.gz M04261:27:000000000-C7J75:1:1101:11401:1775
-# support specific region 
-python extract.FastX.py test.fa chr1 2 5
-# support specific chrome.
-python extract.FastX.py test.fa chr1
-```
-more detail see: "https://www.jianshu.com/p/22051fc6e0a3"
-
 # parse Fastqc's html
 ```
 This script was used to parser html info that aimed for Fastqc result.
@@ -71,6 +58,19 @@ python print_MCUC.py
 all scripts are in Fastx dir.
 1. complement and reverse a Fastq file:
 python complement_reverse_Fastq_2_Fastq.py xxx.fq >xxx.complement.reverse.fq 
+2. extract.FastX.py
+```
+#support read id list file
+python extract.FastX.py test.fq test.list
+# support gzip file and specific read id
+python extract.FastX.py test.fastq.gz M04261:27:000000000-C7J75:1:1101:11401:1775
+# support specific region 
+python extract.FastX.py test.fa chr1 2 5
+# support specific chrome.
+python extract.FastX.py test.fa chr1
+```
+more detail see: "https://www.jianshu.com/p/22051fc6e0a3"
+3. simulate_fasta2fastq.py
 
 # md5sum check
 ```
