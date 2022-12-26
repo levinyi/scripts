@@ -36,7 +36,7 @@ def deal_fasta(fasta, chrome, flag, start=0, end=0):
         if record.id == chrome and flag == 'Ture':
             print (record.seq[start - 1: end])  # start include; ends exclude
             break
-        elif record.id == chrome and flag == 'False':
+        elif record.id == str(chrome) and flag == 'False':
             print (record.seq)
             break
 
