@@ -11,7 +11,7 @@ def main():
 
     for i in range(1, args.total_nu):
         if args.total_nu % (args.line*i) == 0:
-            print args.line*i, args.total_nu/(args.line*i)
+            print(args.line*i, args.total_nu/(args.line*i))
 
 
 if __name__ == '__main__':
