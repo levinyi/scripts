@@ -13,9 +13,6 @@ with open(sys.argv[1], "r") as ff:
         primers[id] = primer
 print "finished deal primers, stored as dict."
 
-def judge_distance(distance_dict):
-    pass
-
 
 def addtwodimdict(thedict, key_a, key_b, val):
     ''' this is a function to add two dimetion dict '''
@@ -24,8 +21,10 @@ def addtwodimdict(thedict, key_a, key_b, val):
     else:
         thedict.update({key_a:{key_b: val}})
     return thedict
-
+                      
+_TRAC = 'ATATCCAGAACCCTGACTCCGGATCCGGA'
 pattern = re.compile(r'ATATCCAGAACCCTGACCCTGCGTACCAGCACAAGTTTGTACAAAAAAGCAGGCTACC')
+
 total_number = 0
 ATG_number = 0
 non_atg = 0
@@ -48,6 +47,7 @@ for record in SeqIO.parse(header,"fastq"):
                     distance = edit_distance.minEditDist(primer_seq, newseq[:len(primer_seq)])
                     # addtwodimdict(reads_info_dict,record.id,primer_id,distance)
                     addtwodimdict(small_dict,record.id,primer_id,distance)
+
         for read_id, read_dict in small_dict.items():
             for primer, distance in read_dict.items():
                 if min(read_dict.values()) ==0:
