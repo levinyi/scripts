@@ -22,10 +22,10 @@ if __author__ is None:
 if __license__ is None:
     sys.exit('Missing license information in %s\n.' % info_file)
 
+
 igblast_out = sys.argv[1:-1]
 result_dict = {}
 for each_file in igblast_out:
-    # with open(igblast_out, "r") as f:
     with open(each_file, "r") as f:
         for line in f:
             line = line.rstrip("\n")
@@ -41,6 +41,7 @@ for each_file in igblast_out:
                 else:
                     # this is a forword read_id
                     result_dict.setdefault(read_id, []).append(gene)
+
 
 with open(sys.argv[-1], "w") as output:
     for k, v in result_dict.items():
