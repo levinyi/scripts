@@ -14,12 +14,14 @@ def rm_dup_gene(gene):
     new_list = list(set(new_list))
     return new_list
 
+
 igblast_file = sys.argv[1]
 flag = str(sys.argv[2])
 flag_dict = {
     'TRA': 'TRB',
     'TRB': 'TRA'
 }
+
 
 no_flag_error = 0
 AB_error = 0
