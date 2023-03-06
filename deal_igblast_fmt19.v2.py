@@ -1,5 +1,6 @@
 import sys
 import re
+
 '''
 update:
     15-03-2019: if two genes in one read, print two genes separatly. see line 59.
@@ -60,4 +61,4 @@ with open(igblast_file, "r") as f, open(sys.argv[3],"w") as output_handle :
                     # print read_id, uniq_gene_list
         else:
             mismatch +=1
-print "correct:%s\n no_flag_error:%s\n AB_error:%s\n two_gene:%s\n mismatch:%s\ntotal_read:%s\n"%(correct,no_flag_error,AB_error,two_gene,mismatch,total_read)
+print("correct:%s\n no_flag_error:%s\n AB_error:%s\n two_gene:%s\n mismatch:%s\ntotal_read:%s\n"%(correct,no_flag_error,AB_error,two_gene,mismatch,total_read))
