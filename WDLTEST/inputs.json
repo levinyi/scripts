@@ -1,0 +1,9 @@
+{
+  "parallel_copy.input_files": [
+    "file:///path/to/input1.txt",
+    "file:///path/to/input2.txt",
+    "file:///path/to/input3.txt"
+  ],
+  "parallel_copy.destination": "file:///path/to/destination"
+}
+
