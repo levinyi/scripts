@@ -6,3 +6,4 @@ test/*
 test*
 jinja2
 data_merge/DataMerge.py
+python_SMS/sms.py
