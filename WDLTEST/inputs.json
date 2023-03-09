@@ -1,9 +1,8 @@
 {
   "parallel_copy.input_files": [
-    "file:///path/to/input1.txt",
-    "file:///path/to/input2.txt",
-    "file:///path/to/input3.txt"
+    "/cygene2/data/2023/GZCYYX-20230301-L-01-2023-03-041607/Sample_GZ23001074-R230301P01-G517E8L1/GZ23001074-R230301P01-G517E8L1_combined_R2.fastq.gz.md5",
+    "/cygene2/data/2023/GZCYYX-20230301-L-01-2023-03-041607/Sample_GZ23001074-R230301P01-G517E8L1/GZ23001074-R230301P01-G517E8L1_combined_R1.fastq.gz.md5"
   ],
-  "parallel_copy.destination": "file:///path/to/destination"
+  "parallel_copy.destination": "/cygene/script/WDLTEST/"
 }
 
