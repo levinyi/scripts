@@ -1,13 +1,12 @@
 task copy {
-  input {
     File input_file
     String destination
-  }
   command {
     cp ${input_file} ${destination}
+    echo "finished copy ${input_file} to ${destination}"
   }
   output {
-    File output_file = "${destination}/${input_file.name}"
+    String output_file = "${destination}/${input_file}"
   }
 }
 
@@ -17,7 +16,8 @@ workflow parallel_copy {
 
   scatter (input_file in input_files) {
     call copy {
-      input: input_file = input_file, destination = destination
+      input: 
+        input_file = input_file, destination = destination
     }
   }
 }
